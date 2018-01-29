@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/graphql/pubsub.js"],"names":["pubSub"],"mappings":";;;;;;AAAA;;AAEA,IAAMA,SAAS,kCAAf;;kBAEeA,M","file":"pubsub.js","sourcesContent":["import { PubSub } from 'graphql-subscriptions';\n\nconst pubSub = new PubSub();\n\nexport default pubSub; \n\n"]}

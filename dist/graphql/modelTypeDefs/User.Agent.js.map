@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/graphql/modelTypeDefs/User.Agent.js"],"names":["type"],"mappings":";;;;;AAAA,IAAMA,uKAAN;kBASeA,I","file":"User.Agent.js","sourcesContent":["const type = `\n\ttype UserAgentType {\n\t\t_id: ID\n\t\tPlayers: [UserPlayerType]\n\t\tdeletedPlayers: [UserPlayerType]\n\t\temail: String\n\t\tisBonusWeek: Boolean\n\t}\n`;\nexport default type;"]}

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/graphql/resolvers/LogoCollect/typeDefs.js"],"names":["Query"],"mappings":";;;;;AAAO,IAAMA,+JAAN","file":"typeDefs.js","sourcesContent":["export const Query = `\n\tlogos ( \n\t\tname: String\n\t\tteam: String\n\t\tsport: String\n\t\tleague: String\n\t\tregion: String\n\t): [LogoCollectType]\n`;"]}

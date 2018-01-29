@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/graphql/modelTypeDefs/LogoCollect.js"],"names":["type"],"mappings":";;;;;AAAA,IAAMA,6JAAN;kBAUeA,I","file":"LogoCollect.js","sourcesContent":["const type = `\n\ttype LogoCollectType {\n\t\tname: String\n\t\tteam: String\n\t\tsport: String\n\t\tleague: String\n\t\tregion: String\n\t\tdetail: String\n\t}\n`;\nexport default type;"]}

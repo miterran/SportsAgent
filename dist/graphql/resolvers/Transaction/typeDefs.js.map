@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/graphql/resolvers/Transaction/typeDefs.js"],"names":["Query"],"mappings":";;;;;AAAO,IAAMA,sHAAN","file":"typeDefs.js","sourcesContent":["export const Query = `\n\ttransactions (\n\t\tstartOfWeekNum: Int\n\t\tendOfWeekNum: Int\n\t): [TransactionType]\n`;"]}

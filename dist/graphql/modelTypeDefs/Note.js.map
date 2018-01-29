@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/graphql/modelTypeDefs/Note.js"],"names":["type"],"mappings":";;;;;AAAA,IAAMA,+FAAN;kBAOeA,I","file":"Note.js","sourcesContent":["const type = `\n\ttype NoteType {\n\t\ttitle: String\n\t\tcontent: String\n\t\tstatus: String\n\t}\n`;\nexport default type;"]}

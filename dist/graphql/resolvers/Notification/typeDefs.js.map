@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/graphql/resolvers/Notification/typeDefs.js"],"names":["Subscription","type"],"mappings":";;;;;AAAO,IAAMA,iFAAN;;AAIA,IAAMC,4FAAN","file":"typeDefs.js","sourcesContent":["export const Subscription = `\n\tnotificationAdded: NotificationType\n`;\n\nexport const type = `\n\ttype NotificationType {\n\t\t_id: ID\n\t\tcontent: String\n\t}\n`;"]}

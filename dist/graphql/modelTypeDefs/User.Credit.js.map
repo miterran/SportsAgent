@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/graphql/modelTypeDefs/User.Credit.js"],"names":["type"],"mappings":";;;;;AAAA,IAAMA,mHAAN;kBAQeA,I","file":"User.Credit.js","sourcesContent":["const type = `\n\ttype UserCreditType {\n\t\tinitial: Int\n\t\tbalance: Int\n\t\tpending: Int\n\t\tavailable: Int\n\t}\n`;\nexport default type;"]}
