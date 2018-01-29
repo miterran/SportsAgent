@@ -102,11 +102,11 @@ var EventClass = function () {
 		key: 'teamLogo',
 		get: function get() {
 			//		const url = 'http://192.168.1.10:8080/'
-			var url = 'https://sportsagentapp.herokuapp.com/';
+			var url = 'sportsagentapp.herokuapp.com';
 			return {
-				away: url + 'images/teamlogos/' + this.team.away.split(' ').join('_') + '.png',
-				home: url + 'images/teamlogos/' + this.team.home.split(' ').join('_') + '.png',
-				default: url + 'images/teamlogos/' + this.sport + '.png'
+				away: url + '/images/teamlogos/' + this.team.away.split(' ').join('_') + '.png',
+				home: url + '/images/teamlogos/' + this.team.home.split(' ').join('_') + '.png',
+				default: url + '/images/teamlogos/' + this.sport + '.png'
 			};
 		}
 	}, {
