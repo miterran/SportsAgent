@@ -219,7 +219,9 @@ ws.listen(process.env.PORT, function () {
 		subscribe: _graphql.subscribe,
 		schema: _schema2.default,
 		onConnect: function onConnect(connectionParams, webSocket) {
-			if (userCounter.includes(webSocket.upgradeReq.headers['sec-websocket-key'])) userCounter.push(webSocket.upgradeReq.headers['sec-websocket-key']);
+			if (!userCounter.includes(webSocket.upgradeReq.headers['sec-websocket-key'])) {
+				userCounter.push(webSocket.upgradeReq.headers['sec-websocket-key']);
+			}
 			// eslint-disable-next-line
 			console.log(userCounter.length);
 			if (userCounter.length === 1) {
