@@ -101,7 +101,7 @@ var EventClass = function () {
 	_createClass(EventClass, [{
 		key: 'teamLogo',
 		get: function get() {
-			var url = 'sportsagentapp.herokuapp.com';
+			var url = 'https://sportsagentapp.herokuapp.com';
 			return {
 				away: url + '/images/teamlogos/' + this.team.away.split(' ').join('_').toLowerCase() + '.png',
 				home: url + '/images/teamlogos/' + this.team.home.split(' ').join('_').toLowerCase() + '.png',
