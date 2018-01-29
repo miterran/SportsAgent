@@ -205,7 +205,7 @@ app.use('/graphql', (0, _apolloServerExpress.graphqlExpress)(function (req) {
 app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	endpointURL: '/graphql',
 	//	subscriptionsEndpoint: 'ws://localhost:8080/subscriptions'
-	subscriptionsEndpoint: 'wss://sportsagentapp.herokuapp.com/subscriptions'
+	subscriptionsEndpoint: 'ws://sportsagentapp.herokuapp.com/subscriptions'
 }));
 
 var ws = (0, _http.createServer)(app);
