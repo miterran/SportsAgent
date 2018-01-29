@@ -130,6 +130,7 @@ app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirn
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/ncaa')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/hockey')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/sport')));
+app.use(_express2.default.static(_path2.default.resolve(__dirname, '../client/build')));
 
 var userCounter = [];
 
@@ -207,6 +208,10 @@ app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	//	subscriptionsEndpoint: 'ws://localhost:8080/subscriptions'
 	subscriptionsEndpoint: 'ws://sportsagentapp.herokuapp.com/subscriptions'
 }));
+
+app.get('*', function (req) {
+	return req.sendFile(_path2.default.resolve(__dirname, '../client/build', 'index.html'));
+});
 
 var ws = (0, _http.createServer)(app);
 
