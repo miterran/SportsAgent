@@ -141,11 +141,16 @@ _nodeSchedule2.default.scheduleJob('*/3 * * * *', _asyncToGenerator( /*#__PURE__
 				case 0:
 					// eslint-disable-next-line
 					console.log('scheduleJob usercounter', (0, _moment2.default)(), userCounter.length);
-					// if(userCounter.length > 0){
-					// 	await updateEvents();
-					// }
 
-				case 1:
+					if (!(userCounter.length > 0)) {
+						_context.next = 4;
+						break;
+					}
+
+					_context.next = 4;
+					return (0, _updateEvents2.default)();
+
+				case 4:
 				case 'end':
 					return _context.stop();
 			}
