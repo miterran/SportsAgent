@@ -343,7 +343,7 @@ var Mutation = exports.Mutation = {
 								return pick.ID;
 							});
 							_context4.next = 29;
-							return _BetOrder2.default.find({ 'bet.action': action, isClosed: false }, 'ID Picks createdAt').populate({ path: 'Picks', select: 'ID' }).then(function (betOrders) {
+							return _BetOrder2.default.find({ Player: _mongoose2.default.Types.ObjectId(ctx.user._id), 'bet.action': action, isClosed: false }, 'ID Picks createdAt').populate({ path: 'Picks', select: 'ID' }).then(function (betOrders) {
 								return betOrders.map(function (betOrder) {
 									return { ID: betOrder.ID, createdAt: betOrder.createdAt, Picks: betOrder.Picks.map(function (Pick) {
 											return Pick.ID;
