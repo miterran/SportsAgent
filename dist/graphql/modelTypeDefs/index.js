@@ -48,9 +48,17 @@ var _LogoCollect = require('./LogoCollect');
 
 var _LogoCollect2 = _interopRequireDefault(_LogoCollect);
 
+var _PriceRate = require('./PriceRate');
+
+var _PriceRate2 = _interopRequireDefault(_PriceRate);
+
+var _SystemLog = require('./SystemLog');
+
+var _SystemLog2 = _interopRequireDefault(_SystemLog);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var modelTypeDefs = [_User2.default, _User4.default, _User6.default, _User8.default, _Note2.default, _Table2.default, _Event2.default, _BetOrder2.default, _Pick2.default, _Transaction2.default, _LogoCollect2.default];
+var modelTypeDefs = [_User2.default, _User4.default, _User6.default, _User8.default, _Note2.default, _Table2.default, _Event2.default, _BetOrder2.default, _Pick2.default, _Transaction2.default, _LogoCollect2.default, _PriceRate2.default, _SystemLog2.default];
 
 exports.default = modelTypeDefs;
 //# sourceMappingURL=index.js.map

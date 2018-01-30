@@ -53,16 +53,27 @@ var _uniqid = require('uniqid');
 
 var _uniqid2 = _interopRequireDefault(_uniqid);
 
-var _sendgrid = require('sendgrid');
+var _PriceRate = require('../../../models/PriceRate');
 
-var _sendgrid2 = _interopRequireDefault(_sendgrid);
+var _PriceRate2 = _interopRequireDefault(_PriceRate);
+
+var _nodemailer = require('nodemailer');
+
+var _nodemailer2 = _interopRequireDefault(_nodemailer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var helper = _sendgrid2.default.mail;
-var sg = (0, _sendgrid2.default)(_config2.default.SENDGRID_KEY);
+var transporter = _nodemailer2.default.createTransport({
+	host: 'smtp.gmail.com',
+	port: 465,
+	secure: true,
+	auth: {
+		user: _config2.default.GMAIL, // generated ethereal user
+		pass: _config2.default.GPASSWORD // generated ethereal password
+	}
+});
 
 var forgotPasswordSchema = _yup2.default.object().shape({
 	email: _yup2.default.string().email().required(),
@@ -107,7 +118,7 @@ var Mutation = exports.Mutation = {
 		var _this = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-			var isReqValid, isUserExisted, isEmailExisted, agent, newAgent;
+			var isReqValid, isUserExisted, isEmailExisted, agent, newAgent, newAgentBonus;
 			return regeneratorRuntime.wrap(function _callee$(_context) {
 				while (1) {
 					switch (_context.prev = _context.next) {
@@ -184,41 +195,46 @@ var Mutation = exports.Mutation = {
 						case 22:
 							newAgent = _context.sent;
 							_context.next = 25;
+							return _PriceRate2.default.findOne({ item: 'NewAgentBonus' });
+
+						case 25:
+							newAgentBonus = _context.sent;
+							_context.next = 28;
 							return _Transaction2.default.create({
 								Agent: newAgent._id,
 								ID: _uniqid2.default.process(),
 								type: 'Bonus',
 								description: 'New Agent Bonus',
-								amount: 750,
+								amount: newAgentBonus.credit,
 								balance: newAgent.credit.balance
 							});
 
-						case 25:
-							_context.next = 27;
+						case 28:
+							_context.next = 30;
 							return _SystemLog2.default.create({ title: 'New Agent Created', content: req.username, status: 'success' });
 
-						case 27:
-							_context.next = 29;
-							return _SystemLog2.default.create({ title: 'New Agent Bonus + 750', content: req.username, status: 'success' });
-
-						case 29:
-							return _context.abrupt('return', { title: 'Created New Agent', content: _jsonwebtoken2.default.sign(_lodash2.default.pick(newAgent, ['_id', 'role', 'username']), _config2.default.jwtSecret), status: 'success' });
+						case 30:
+							_context.next = 32;
+							return _SystemLog2.default.create({ title: 'New Agent Bonus ' + newAgentBonus.credit, content: req.username, status: 'success' });
 
 						case 32:
-							_context.prev = 32;
+							return _context.abrupt('return', { title: 'Created New Agent', content: _jsonwebtoken2.default.sign(_lodash2.default.pick(newAgent, ['_id', 'role', 'username']), _config2.default.jwtSecret), status: 'success' });
+
+						case 35:
+							_context.prev = 35;
 							_context.t1 = _context['catch'](0);
-							_context.next = 36;
+							_context.next = 39;
 							return _SystemLog2.default.create({ title: 'New Agent Failed', content: req.username + ' ' + _context.t1, status: 'danger' });
 
-						case 36:
+						case 39:
 							return _context.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 37:
+						case 40:
 						case 'end':
 							return _context.stop();
 					}
 				}
-			}, _callee, _this, [[0, 32]]);
+			}, _callee, _this, [[0, 35]]);
 		}))();
 	},
 	login: function login(root, req) {
@@ -265,7 +281,7 @@ var Mutation = exports.Mutation = {
 		var _this3 = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-			var agent, isReqValid, isUserExisted, player, newPlayer, agentUpdated;
+			var agent, isReqValid, isUserExisted, player, newPlayer, agentUpdated, newPriceCost;
 			return regeneratorRuntime.wrap(function _callee3$(_context3) {
 				while (1) {
 					switch (_context3.prev = _context3.next) {
@@ -381,66 +397,73 @@ var Mutation = exports.Mutation = {
 						case 27:
 							agentUpdated = _context3.sent;
 							_context3.next = 30;
+							return _PriceRate2.default.findOne({ item: 'NewPlayerCost' });
+
+						case 30:
+							newPriceCost = _context3.sent;
+							_context3.next = 33;
 							return _Transaction2.default.create({
 								Agent: ctx.user._id,
 								ID: _uniqid2.default.process(),
 								type: 'CreatePlayer',
 								description: 'New Player ' + newPlayer.username + ' (' + newPlayer.nickname + ')',
-								amount: -100,
+								amount: newPriceCost.credit,
 								balance: agentUpdated.credit.balance
 							});
 
-						case 30:
-							_context3.next = 32;
+						case 33:
+							_context3.next = 35;
 							return _SystemLog2.default.create({ title: 'New Player Created', content: agentUpdated.username + ' created a new player ' + newPlayer.username + ' (' + newPlayer.nickname + ')', status: 'success' });
 
-						case 32:
+						case 35:
 							return _context3.abrupt('return', { title: 'New Player', content: newPlayer.username, status: 'success' });
 
-						case 35:
-							_context3.prev = 35;
+						case 38:
+							_context3.prev = 38;
 							_context3.t1 = _context3['catch'](0);
-							_context3.next = 39;
+							_context3.next = 42;
 							return _SystemLog2.default.create({ title: 'New Player Create Failed', content: ctx.user.username + ' create player ' + req.playerUsername + ' failed ' + _context3.t1, status: 'danger' });
 
-						case 39:
+						case 42:
 							return _context3.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 40:
+						case 43:
 						case 'end':
 							return _context3.stop();
 					}
 				}
-			}, _callee3, _this3, [[0, 35]]);
+			}, _callee3, _this3, [[0, 38]]);
 		}))();
 	},
 	forgotPassword: function forgotPassword(root, req) {
 		var _this4 = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-			var isReqValid, tempPassword, agent, from_email, to_email, subject, content, mail, request;
+			var isReqValid, tempPassword, agent, mailOptions;
 			return regeneratorRuntime.wrap(function _callee4$(_context4) {
 				while (1) {
 					switch (_context4.prev = _context4.next) {
 						case 0:
 							_context4.prev = 0;
-							_context4.next = 3;
+
+							console.log(req);
+							_context4.next = 4;
 							return forgotPasswordSchema.isValid(req);
 
-						case 3:
+						case 4:
 							isReqValid = _context4.sent;
 
 							if (isReqValid) {
-								_context4.next = 9;
+								_context4.next = 10;
 								break;
 							}
 
-							_context4.next = 7;
+							_context4.next = 8;
 							return forgotPasswordSchema.validate(req).catch(function (err) {
 								return err.message;
 							});
 
-						case 7:
+						case 8:
 							_context4.t0 = _context4.sent;
 							return _context4.abrupt('return', {
 								title: 'Please try again.',
@@ -448,53 +471,49 @@ var Mutation = exports.Mutation = {
 								status: 'warning'
 							});
 
-						case 9:
+						case 10:
 							tempPassword = _uniqid2.default.process().substring(0, 6);
-							_context4.next = 12;
+							_context4.next = 13;
 							return _User4.default.findOneAndUpdate({ email: req.email, passcode: req.passcode }, { $set: { password: tempPassword } });
 
-						case 12:
+						case 13:
 							agent = _context4.sent;
 
 							if (agent) {
-								_context4.next = 15;
+								_context4.next = 16;
 								break;
 							}
 
 							return _context4.abrupt('return', { title: 'Please try again.', content: 'Email or Passcode is incorrect', status: 'danger' });
 
-						case 15:
-							from_email = new helper.Email(_config2.default.HOSTEMAIL);
-							to_email = new helper.Email(agent.email);
-							subject = 'SPORTS AGENT APP PASSWORD RESET';
-							content = new helper.Content('text/plain', 'Sports Agent App \n username: ' + agent.username + ' \n temporary password: ' + tempPassword + ' \n Please reset after login.');
-							mail = new helper.Mail(from_email, subject, to_email, content);
-							request = sg.emptyRequest({
-								method: 'POST',
-								path: '/v3/mail/send',
-								body: mail.toJSON()
-							});
-							_context4.next = 23;
-							return sg.API(request);
+						case 16:
+							mailOptions = {
+								from: _config2.default.GMAIL, // sender address
+								to: agent.email, // list of receivers
+								subject: 'SPORTS AGENT APP PASSWORD RESET', // Subject line
+								text: 'Sports Agent App \n username: ' + agent.username + ' \n temporary password: ' + tempPassword + ' \n Please reset after login.' // plain text body
+							};
+							_context4.next = 19;
+							return transporter.sendMail(mailOptions);
 
-						case 23:
+						case 19:
 							return _context4.abrupt('return', { title: 'SUCCESS', content: 'temporary password has been sent to ' + agent.email, status: 'success' });
 
-						case 26:
-							_context4.prev = 26;
+						case 22:
+							_context4.prev = 22;
 							_context4.t1 = _context4['catch'](0);
-							_context4.next = 30;
+							_context4.next = 26;
 							return _SystemLog2.default.create({ title: 'Agent Reset Password Error', content: req.email + ' ' + req.passcode + ' failed ' + _context4.t1, status: 'danger' });
 
-						case 30:
+						case 26:
 							return _context4.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 31:
+						case 27:
 						case 'end':
 							return _context4.stop();
 					}
 				}
-			}, _callee4, _this4, [[0, 26]]);
+			}, _callee4, _this4, [[0, 22]]);
 		}))();
 	}
 };

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/graphql/resolvers/SystemLog/typeDefs.js"],"names":["Query"],"mappings":";;;;;AAAO,IAAMA,uFAAN","file":"typeDefs.js","sourcesContent":["export const Query = `\n\tsystemLogs (\n\t\tstatus: String!\n\t): [SystemLogType]\n`;"]}

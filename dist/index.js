@@ -141,16 +141,11 @@ _nodeSchedule2.default.scheduleJob('*/3 * * * *', _asyncToGenerator( /*#__PURE__
 				case 0:
 					// eslint-disable-next-line
 					console.log('scheduleJob usercounter', (0, _moment2.default)(), userCounter.length);
+					// if(userCounter.length > 0){
+					// 	await updateEvents();
+					// }
 
-					if (!(userCounter.length > 0)) {
-						_context.next = 4;
-						break;
-					}
-
-					_context.next = 4;
-					return (0, _updateEvents2.default)();
-
-				case 4:
+				case 1:
 				case 'end':
 					return _context.stop();
 			}
@@ -205,12 +200,12 @@ app.use('/graphql', (0, _apolloServerExpress.graphqlExpress)(function (req) {
 
 app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	endpointURL: '/graphql',
-	//	subscriptionsEndpoint: 'ws://localhost:8080/subscriptions'
-	subscriptionsEndpoint: 'ws://sportsagentapp.herokuapp.com/subscriptions'
+	subscriptionsEndpoint: _config2.default.WSURL
+	//	subscriptionsEndpoint: 'ws://sportsagentapp.herokuapp.com/subscriptions'
 }));
 
-app.get('*', function (req) {
-	return req.sendFile(_path2.default.resolve(__dirname, '../client/build', 'index.html'));
+app.get('/app', function (req, res) {
+	return res.sendFile(_path2.default.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 var ws = (0, _http.createServer)(app);

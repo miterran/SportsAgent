@@ -14,7 +14,7 @@ var Schema = _mongoose2.default.Schema;
 
 var TransactionSchema = new Schema({
 	Agent: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-	ID: { type: String, required: true, unique: true },
+	ID: { type: String, required: true },
 	type: { type: String, enum: ['BetOrder', 'Purchase', 'Bonus', 'CreatePlayer', 'ActionFee'], required: true },
 	description: { type: String, required: true },
 	amount: { type: Number, required: true },

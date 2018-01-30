@@ -28,7 +28,11 @@ var envVarsSchema = _joi2.default.object({
 	PICKMON_UID: _joi2.default.string().required().description('PICKMON UID'),
 	PICKMON_KEY: _joi2.default.string().required().description('PICKMON KEY'),
 	SENDGRID_KEY: _joi2.default.string().required().description('SENDGRID_KEY'),
-	HOSTEMAIL: _joi2.default.string().required().description('HOSTEMAIL')
+	HOSTEMAIL: _joi2.default.string().required().description('HOSTEMAIL'),
+	HOSTURL: _joi2.default.string().required().description('HOSTURL'),
+	WSURL: _joi2.default.string().required().description('WSURL'),
+	GMAIL: _joi2.default.string().required().description('GMAIL'),
+	GPASSWORD: _joi2.default.string().required().description('GPASSWORD')
 }).unknown().required();
 
 var _Joi$validate = _joi2.default.validate(process.env, envVarsSchema),
@@ -49,7 +53,11 @@ var config = {
 	pickMon_UID: envVars.PICKMON_UID,
 	pickMon_Key: envVars.PICKMON_KEY,
 	SENDGRID_KEY: envVars.SENDGRID_KEY,
-	HOSTEMAIL: envVars.HOSTEMAIL
+	HOSTEMAIL: envVars.HOSTEMAIL,
+	HOSTURL: envVars.HOSTURL,
+	WSURL: envVars.WSURL,
+	GMAIL: envVars.GMAIL,
+	GPASSWORD: envVars.GPASSWORD
 };
 
 exports.default = config;

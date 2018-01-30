@@ -238,7 +238,6 @@ var updateEventOddFromPickMon = function () {
 					case 65:
 						//
 
-
 						newEvent = {
 							ID: event.id,
 							uniqueID: theUniqueID,

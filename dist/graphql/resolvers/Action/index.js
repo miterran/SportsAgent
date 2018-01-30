@@ -85,6 +85,10 @@ var _Transaction = require('../../../models/Transaction');
 
 var _Transaction2 = _interopRequireDefault(_Transaction);
 
+var _PriceRate = require('../../../models/PriceRate');
+
+var _PriceRate2 = _interopRequireDefault(_PriceRate);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -237,7 +241,7 @@ var Mutation = exports.Mutation = {
 		    toWin = _ref3.toWin,
 		    picks = _ref3.picks;
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-			var player, _generateAtRiskToWin, recalAtRisk, recalToWin, agentAvailableCredit, pickIDs, existedOpenBets, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, existedOpenBet, uniqEventIDs, mongooseEventIDs, latestEvents, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, pick, latestEvent, sport, league, period, cutOffAt, _latestEvent$team, away, home, eventDetail, latestOddPoint, latestOddLine, pickOddPoint, pickOddLine, oddUpdatedDetail, newBetOrder, savedBetOrder, newPicks, savedPickIDs, theBetOrder, agent;
+			var player, _generateAtRiskToWin, recalAtRisk, recalToWin, agentAvailableCredit, pickIDs, existedOpenBets, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, existedOpenBet, uniqEventIDs, mongooseEventIDs, latestEvents, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, pick, latestEvent, sport, league, period, cutOffAt, _latestEvent$team, away, home, eventDetail, latestOddPoint, latestOddLine, pickOddPoint, pickOddLine, oddUpdatedDetail, newBetOrder, savedBetOrder, newPicks, savedPickIDs, theBetOrder, agent, actionFee;
 
 			return regeneratorRuntime.wrap(function _callee4$(_context4) {
 				while (1) {
@@ -594,37 +598,42 @@ var Mutation = exports.Mutation = {
 						case 120:
 							agent = _context4.sent;
 							_context4.next = 123;
+							return _PriceRate2.default.findOne({ item: 'PlayerActionFee' });
+
+						case 123:
+							actionFee = _context4.sent;
+							_context4.next = 126;
 							return _Transaction2.default.create({
 								Agent: agent._id,
 								ID: savedBetOrder.ID,
 								type: 'ActionFee',
 								description: '(' + ctx.user.username + ') Action Fee',
-								amount: -10,
+								amount: actionFee.credit,
 								balance: agent.credit.balance
 							});
 
-						case 123:
-							_context4.next = 125;
+						case 126:
+							_context4.next = 128;
 							return _SystemLog2.default.create({ title: 'New Open Bet Order', content: ctx.user.username + ' created a open bet ' + theBetOrder.title, status: 'success' });
 
-						case 125:
+						case 128:
 							return _context4.abrupt('return', { title: 'SUCCESS', content: '#' + savedBetOrder.ID.toUpperCase() + ' CREATED', status: 'success' });
 
-						case 128:
-							_context4.prev = 128;
+						case 131:
+							_context4.prev = 131;
 							_context4.t2 = _context4['catch'](0);
-							_context4.next = 132;
+							_context4.next = 135;
 							return _SystemLog2.default.create({ title: 'New Open Bet Order Failed', content: ctx.user.username + ' created a open bet Failed ' + _context4.t2, status: 'danger' });
 
-						case 132:
+						case 135:
 							return _context4.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 133:
+						case 136:
 						case 'end':
 							return _context4.stop();
 					}
 				}
-			}, _callee4, _this4, [[0, 128], [33, 44, 48, 56], [49,, 51, 55], [66, 91, 95, 103], [96,, 98, 102]]);
+			}, _callee4, _this4, [[0, 131], [33, 44, 48, 56], [49,, 51, 55], [66, 91, 95, 103], [96,, 98, 102]]);
 		}))();
 	}
 };

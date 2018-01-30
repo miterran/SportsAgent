@@ -26,6 +26,10 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
+var _config = require('../config');
+
+var _config2 = _interopRequireDefault(_config);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -101,10 +105,10 @@ var EventClass = function () {
 	_createClass(EventClass, [{
 		key: 'teamLogo',
 		get: function get() {
-			var url = 'https://sportsagentapp.herokuapp.com';
+			var url = _config2.default.HOSTURL;
 			return {
-				away: url + '/images/teamlogos/' + this.team.away.split(' ').join('_').toLowerCase() + '.png',
-				home: url + '/images/teamlogos/' + this.team.home.split(' ').join('_').toLowerCase() + '.png',
+				away: url + '/images/teamlogos/' + this.team.away.split(' ').join('_').toLowerCase().replace(/\.|\'|\&/g, '') + '.png',
+				home: url + '/images/teamlogos/' + this.team.home.split(' ').join('_').toLowerCase().replace(/\.|\'|\&/g, '') + '.png',
 				default: url + '/images/teamlogos/' + this.sport.toLowerCase() + '.png'
 			};
 		}
