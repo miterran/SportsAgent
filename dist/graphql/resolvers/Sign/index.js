@@ -247,19 +247,18 @@ var Mutation = exports.Mutation = {
 		var _this2 = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-			var user, token;
+			var deviceToken, user, token;
 			return regeneratorRuntime.wrap(function _callee2$(_context2) {
 				while (1) {
 					switch (_context2.prev = _context2.next) {
 						case 0:
 							_context2.prev = 0;
-							_context2.next = 3;
-							return _User2.default.findOneAndUpdate({ username: new RegExp('\\b' + req.username + '\\b', 'i'), password: req.password }, { $set: { 'notification.deviceToken': req.deviceToken } }, { new: true });
+							deviceToken = req.deviceToken ? { $set: { 'notification.deviceToken': req.deviceToken } } : null;
+							_context2.next = 4;
+							return _User2.default.findOneAndUpdate({ username: new RegExp('\\b' + req.username + '\\b', 'i'), password: req.password });
 
-						case 3:
+						case 4:
 							user = _context2.sent;
-
-							console.log(user.notification);
 
 							if (user) {
 								_context2.next = 7;

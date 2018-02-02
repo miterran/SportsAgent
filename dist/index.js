@@ -141,28 +141,13 @@ app.use(_express2.default.static(_path2.default.resolve(__dirname, '../client/bu
 
 app.get('/hi', function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
-		var agentNotify;
 		return regeneratorRuntime.wrap(function _callee$(_context) {
 			while (1) {
 				switch (_context.prev = _context.next) {
 					case 0:
-						agentNotify = new _apn4.default.Notification({
-							sound: 'ping.aiff',
-							alert: 'test',
-							topic: 'org.reactjs.native.example.SportsAgentApp',
-							payload: { BetOrder: '1234' }
-						});
-						_context.next = 3;
-						return _apn2.default.send(agentNotify, '23f8b6c64012cf886b5d3b2e588c40d1e8e476439ea6c94a781d479d764464bf').then(function (res) {
-							return console.log(res);
-						});
-
-					case 3:
-						_apn2.default.shutdown();
-
 						res.json('done');
 
-					case 5:
+					case 1:
 					case 'end':
 						return _context.stop();
 				}
@@ -244,8 +229,8 @@ app.use('/graphql', (0, _apolloServerExpress.graphqlExpress)(function (req) {
 app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	endpointURL: '/graphql',
 	subscriptionsEndpoint: _config2.default.WSURL
-	//	subscriptionsEndpoint: 'ws://sportsagentapp.herokuapp.com/subscriptions'
 }));
+
 app.get('/app', function (req, res) {
 	return res.sendFile(_path2.default.resolve(__dirname, '../client/build', 'index.html'));
 });
