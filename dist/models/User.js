@@ -8,6 +8,10 @@ var _User = require('./User.Credit');
 
 var _User2 = _interopRequireDefault(_User);
 
+var _User3 = require('./User.Notification');
+
+var _User4 = _interopRequireDefault(_User3);
+
 var _mongoose = require('mongoose');
 
 var _mongoose2 = _interopRequireDefault(_mongoose);
@@ -27,7 +31,8 @@ var UserSchema = new Schema({
 	updatedAt: { type: Date, default: Date.now, required: true },
 	createdAt: { type: Date, default: Date.now, required: true },
 	weekNum: { type: Number, default: 0, required: true },
-	credit: _User2.default
+	credit: _User2.default,
+	notification: _User4.default
 }, options);
 
 var User = _mongoose2.default.model('User', UserSchema);

@@ -62,16 +62,7 @@ var BetOrderClass = function () {
 	}, {
 		key: 'overviewPoint',
 		get: function get() {
-			switch (this.status) {
-				case 'Won':
-					return Number(this.resultAmount / this.bet.toWin).toFixed(2);
-				case 'Lost':
-					return Number(Math.abs(this.resultAmount) / this.bet.toRisk).toFixed(2);
-				case 'Push':
-					return 1;
-				default:
-					return 0;
-			}
+			return 0;
 		}
 	}]);
 

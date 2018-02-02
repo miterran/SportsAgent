@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/graphql/modelTypeDefs/User.Notification.js"],"names":["type"],"mappings":";;;;;AAAA,IAAMA,yJAAN;kBAQeA,I","file":"User.Notification.js","sourcesContent":["const type = `\n\ttype UserNotificationType {\n\t\tdeviceToken: String,\n\t\tafterWager: Boolean,\n\t\tafterPick: Boolean,\n\t\tafterBetOrder: Boolean,\n\t}\n`;\nexport default type;"]}

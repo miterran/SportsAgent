@@ -84,7 +84,8 @@ var agentRegisterSchema = _yup2.default.object().shape({
 	username: _yup2.default.string().matches(/^\w+$/, 'Username format is invalid.').min(4).max(10).required(),
 	email: _yup2.default.string().email().required(),
 	password: _yup2.default.string().min(4).max(12).required(),
-	passcode: _yup2.default.string().matches(/^[0-9]+$/, 'Passcode format is invalid.').min(4).max(4).required()
+	passcode: _yup2.default.string().matches(/^[0-9]+$/, 'Passcode format is invalid.').min(4).max(4).required(),
+	deviceToken: _yup2.default.string()
 });
 
 var playerRegisterSchema = _yup2.default.object().shape({
@@ -118,7 +119,7 @@ var Mutation = exports.Mutation = {
 		var _this = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-			var isReqValid, isUserExisted, isEmailExisted, agent, newAgent, newAgentBonus;
+			var isReqValid, isUserExisted, isEmailExisted, newAgentBonus, agent, newAgent;
 			return regeneratorRuntime.wrap(function _callee$(_context) {
 				while (1) {
 					switch (_context.prev = _context.next) {
@@ -177,6 +178,11 @@ var Mutation = exports.Mutation = {
 							return _context.abrupt('return', { title: req.email, content: 'Email has already been taken.', status: 'warning' });
 
 						case 19:
+							_context.next = 21;
+							return _PriceRate2.default.findOne({ item: 'NewAgentBonus' });
+
+						case 21:
+							newAgentBonus = _context.sent;
 							agent = new _User4.default({
 								username: req.username,
 								email: req.email,
@@ -184,22 +190,22 @@ var Mutation = exports.Mutation = {
 								passcode: req.passcode,
 								weekNum: (0, _moment2.default)().isoWeek(),
 								credit: {
-									balance: 750
+									balance: newAgentBonus.credit
+								},
+								notification: {
+									deviceToken: req.deviceToken
 								},
 								Players: [],
 								deletedPlayers: []
 							});
-							_context.next = 22;
+							_context.next = 25;
 							return agent.save();
 
-						case 22:
-							newAgent = _context.sent;
-							_context.next = 25;
-							return _PriceRate2.default.findOne({ item: 'NewAgentBonus' });
-
 						case 25:
-							newAgentBonus = _context.sent;
-							_context.next = 28;
+							newAgent = _context.sent;
+
+							console.log(newAgent.notification);
+							_context.next = 29;
 							return _Transaction2.default.create({
 								Agent: newAgent._id,
 								ID: _uniqid2.default.process(),
@@ -209,32 +215,32 @@ var Mutation = exports.Mutation = {
 								balance: newAgent.credit.balance
 							});
 
-						case 28:
-							_context.next = 30;
+						case 29:
+							_context.next = 31;
 							return _SystemLog2.default.create({ title: 'New Agent Created', content: req.username, status: 'success' });
 
-						case 30:
-							_context.next = 32;
+						case 31:
+							_context.next = 33;
 							return _SystemLog2.default.create({ title: 'New Agent Bonus ' + newAgentBonus.credit, content: req.username, status: 'success' });
 
-						case 32:
+						case 33:
 							return _context.abrupt('return', { title: 'Created New Agent', content: _jsonwebtoken2.default.sign(_lodash2.default.pick(newAgent, ['_id', 'role', 'username']), _config2.default.jwtSecret), status: 'success' });
 
-						case 35:
-							_context.prev = 35;
+						case 36:
+							_context.prev = 36;
 							_context.t1 = _context['catch'](0);
-							_context.next = 39;
+							_context.next = 40;
 							return _SystemLog2.default.create({ title: 'New Agent Failed', content: req.username + ' ' + _context.t1, status: 'danger' });
 
-						case 39:
+						case 40:
 							return _context.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 40:
+						case 41:
 						case 'end':
 							return _context.stop();
 					}
 				}
-			}, _callee, _this, [[0, 35]]);
+			}, _callee, _this, [[0, 36]]);
 		}))();
 	},
 	login: function login(root, req) {
@@ -248,40 +254,42 @@ var Mutation = exports.Mutation = {
 						case 0:
 							_context2.prev = 0;
 							_context2.next = 3;
-							return _User2.default.findOne({ username: new RegExp('\\b' + req.username + '\\b', 'i'), password: req.password }, '_id username password role');
+							return _User2.default.findOneAndUpdate({ username: new RegExp('\\b' + req.username + '\\b', 'i'), password: req.password }, { $set: { 'notification.deviceToken': req.deviceToken } }, { new: true });
 
 						case 3:
 							user = _context2.sent;
 
+							console.log(user.notification);
+
 							if (user) {
-								_context2.next = 6;
+								_context2.next = 7;
 								break;
 							}
 
 							return _context2.abrupt('return', { title: 'Login Failed', content: 'Username or Password is incorrect', status: 'warning' });
 
-						case 6:
+						case 7:
 							token = _jsonwebtoken2.default.sign(_lodash2.default.pick(user, ['_id', 'role', 'username']), _config2.default.jwtSecret);
 							return _context2.abrupt('return', { title: user.role + 'Navigator', content: token, status: 'success' });
 
-						case 10:
-							_context2.prev = 10;
+						case 11:
+							_context2.prev = 11;
 							_context2.t0 = _context2['catch'](0);
 							return _context2.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 13:
+						case 14:
 						case 'end':
 							return _context2.stop();
 					}
 				}
-			}, _callee2, _this2, [[0, 10]]);
+			}, _callee2, _this2, [[0, 11]]);
 		}))();
 	},
 	playerRegister: function playerRegister(root, req, ctx) {
 		var _this3 = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-			var agent, isReqValid, isUserExisted, player, newPlayer, agentUpdated, newPriceCost;
+			var agent, isReqValid, isUserExisted, player, newPlayer, newPriceCost, agentUpdated;
 			return regeneratorRuntime.wrap(function _callee3$(_context3) {
 				while (1) {
 					switch (_context3.prev = _context3.next) {
@@ -362,6 +370,7 @@ var Mutation = exports.Mutation = {
 								credit: {
 									initial: Number(req.initial)
 								},
+								notification: {},
 								wagerLimit: {
 									parlay: req.parlay,
 									basicTeaser: req.basicTeaser,
@@ -386,21 +395,21 @@ var Mutation = exports.Mutation = {
 						case 24:
 							newPlayer = _context3.sent;
 							_context3.next = 27;
+							return _PriceRate2.default.findOne({ item: 'NewPlayerCost' });
+
+						case 27:
+							newPriceCost = _context3.sent;
+							_context3.next = 30;
 							return _User4.default.findOneAndUpdate({
 								_id: _mongoose2.default.Types.ObjectId(ctx.user._id)
 							}, {
 								$push: { Players: newPlayer._id },
-								$inc: { 'credit.balance': -100 },
+								$inc: { 'credit.balance': newPriceCost.credit },
 								$set: { 'credit.updatedAt': (0, _moment2.default)() }
 							}, { new: true });
 
-						case 27:
-							agentUpdated = _context3.sent;
-							_context3.next = 30;
-							return _PriceRate2.default.findOne({ item: 'NewPlayerCost' });
-
 						case 30:
-							newPriceCost = _context3.sent;
+							agentUpdated = _context3.sent;
 							_context3.next = 33;
 							return _Transaction2.default.create({
 								Agent: ctx.user._id,
@@ -445,25 +454,23 @@ var Mutation = exports.Mutation = {
 					switch (_context4.prev = _context4.next) {
 						case 0:
 							_context4.prev = 0;
-
-							console.log(req);
-							_context4.next = 4;
+							_context4.next = 3;
 							return forgotPasswordSchema.isValid(req);
 
-						case 4:
+						case 3:
 							isReqValid = _context4.sent;
 
 							if (isReqValid) {
-								_context4.next = 10;
+								_context4.next = 9;
 								break;
 							}
 
-							_context4.next = 8;
+							_context4.next = 7;
 							return forgotPasswordSchema.validate(req).catch(function (err) {
 								return err.message;
 							});
 
-						case 8:
+						case 7:
 							_context4.t0 = _context4.sent;
 							return _context4.abrupt('return', {
 								title: 'Please try again.',
@@ -471,49 +478,49 @@ var Mutation = exports.Mutation = {
 								status: 'warning'
 							});
 
-						case 10:
+						case 9:
 							tempPassword = _uniqid2.default.process().substring(0, 6);
-							_context4.next = 13;
+							_context4.next = 12;
 							return _User4.default.findOneAndUpdate({ email: req.email, passcode: req.passcode }, { $set: { password: tempPassword } });
 
-						case 13:
+						case 12:
 							agent = _context4.sent;
 
 							if (agent) {
-								_context4.next = 16;
+								_context4.next = 15;
 								break;
 							}
 
 							return _context4.abrupt('return', { title: 'Please try again.', content: 'Email or Passcode is incorrect', status: 'danger' });
 
-						case 16:
+						case 15:
 							mailOptions = {
 								from: _config2.default.GMAIL, // sender address
 								to: agent.email, // list of receivers
 								subject: 'SPORTS AGENT APP PASSWORD RESET', // Subject line
 								text: 'Sports Agent App \n username: ' + agent.username + ' \n temporary password: ' + tempPassword + ' \n Please reset after login.' // plain text body
 							};
-							_context4.next = 19;
+							_context4.next = 18;
 							return transporter.sendMail(mailOptions);
 
-						case 19:
+						case 18:
 							return _context4.abrupt('return', { title: 'SUCCESS', content: 'temporary password has been sent to ' + agent.email, status: 'success' });
 
-						case 22:
-							_context4.prev = 22;
+						case 21:
+							_context4.prev = 21;
 							_context4.t1 = _context4['catch'](0);
-							_context4.next = 26;
+							_context4.next = 25;
 							return _SystemLog2.default.create({ title: 'Agent Reset Password Error', content: req.email + ' ' + req.passcode + ' failed ' + _context4.t1, status: 'danger' });
 
-						case 26:
+						case 25:
 							return _context4.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 27:
+						case 26:
 						case 'end':
 							return _context4.stop();
 					}
 				}
-			}, _callee4, _this4, [[0, 22]]);
+			}, _callee4, _this4, [[0, 21]]);
 		}))();
 	}
 };

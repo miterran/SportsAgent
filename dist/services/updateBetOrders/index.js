@@ -36,13 +36,25 @@ var _Transaction = require('../../models/Transaction');
 
 var _Transaction2 = _interopRequireDefault(_Transaction);
 
+var _config = require('../../config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _apn = require('../../apn');
+
+var _apn2 = _interopRequireDefault(_apn);
+
+var _apn3 = require('apn');
+
+var _apn4 = _interopRequireDefault(_apn3);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var updateBetOrderResult = function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-		var betOrders, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, betOrder, allPicksPending, update, newBetOrder, player, agent;
+		var betOrders, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, betOrder, allPicksPending, update, newBetOrder, player, agent, agentNotify, playerNotify;
 
 		return regeneratorRuntime.wrap(function _callee$(_context) {
 			while (1) {
@@ -73,7 +85,7 @@ var updateBetOrderResult = function () {
 
 					case 12:
 						if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-							_context.next = 37;
+							_context.next = 46;
 							break;
 						}
 
@@ -85,7 +97,7 @@ var updateBetOrderResult = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 34);
+						return _context.abrupt('continue', 43);
 
 					case 17:
 						update = (0, _settleBetOrder2.default)(betOrder);
@@ -95,11 +107,11 @@ var updateBetOrderResult = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 34);
+						return _context.abrupt('continue', 43);
 
 					case 20:
 						_context.next = 22;
-						return _BetOrder2.default.findOneAndUpdate({ _id: betOrder._id }, { $set: _lodash2.default.merge(update, { updatedAt: (0, _moment2.default)() }) }, { new: true });
+						return _BetOrder2.default.findOneAndUpdate({ _id: betOrder._id }, { $set: _lodash2.default.merge(update, { updatedAt: (0, _moment2.default)() }) }, { new: true }).populate('Agent').populate('Player');
 
 					case 22:
 						newBetOrder = _context.sent;
@@ -109,7 +121,7 @@ var updateBetOrderResult = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 34);
+						return _context.abrupt('continue', 43);
 
 					case 25:
 						_context.next = 27;
@@ -159,60 +171,94 @@ var updateBetOrderResult = function () {
 						});
 
 					case 34:
+						if (!newBetOrder.Agent.notification.afterBetOrder) {
+							_context.next = 38;
+							break;
+						}
+
+						agentNotify = new _apn4.default.Notification({
+							sound: 'ping.aiff',
+							alert: newBetOrder.Player.username + '\'s ' + newBetOrder.title + ' had ' + newBetOrder.status + ' ' + (newBetOrder.resultAmount === 0 ? '' : newBetOrder.resultAmount),
+							topic: _config2.default.APN_TOPIC,
+							payload: { BetOrder: newBetOrder.BetOrder }
+						});
+						_context.next = 38;
+						return _apn2.default.send(agentNotify, newBetOrder.Agent.notification.deviceToken);
+
+					case 38:
+						if (!newBetOrder.Player.notification.afterBetOrder) {
+							_context.next = 42;
+							break;
+						}
+
+						playerNotify = new _apn4.default.Notification({
+							sound: 'ping.aiff',
+							alert: 'Your ' + newBetOrder.title + ' had ' + newBetOrder.status + ' ' + (newBetOrder.resultAmount === 0 ? '' : newBetOrder.resultAmount),
+							topic: _config2.default.APN_TOPIC,
+							payload: { BetOrder: newBetOrder.BetOrder }
+						});
+						_context.next = 42;
+						return _apn2.default.send(playerNotify, newBetOrder.Player.notification.deviceToken);
+
+					case 42:
+
+						_apn2.default.shutdown();
+
+					case 43:
 						_iteratorNormalCompletion = true;
 						_context.next = 12;
 						break;
 
-					case 37:
-						_context.next = 43;
+					case 46:
+						_context.next = 52;
 						break;
 
-					case 39:
-						_context.prev = 39;
+					case 48:
+						_context.prev = 48;
 						_context.t0 = _context['catch'](10);
 						_didIteratorError = true;
 						_iteratorError = _context.t0;
 
-					case 43:
-						_context.prev = 43;
-						_context.prev = 44;
+					case 52:
+						_context.prev = 52;
+						_context.prev = 53;
 
 						if (!_iteratorNormalCompletion && _iterator.return) {
 							_iterator.return();
 						}
 
-					case 46:
-						_context.prev = 46;
+					case 55:
+						_context.prev = 55;
 
 						if (!_didIteratorError) {
-							_context.next = 49;
+							_context.next = 58;
 							break;
 						}
 
 						throw _iteratorError;
 
-					case 49:
-						return _context.finish(46);
+					case 58:
+						return _context.finish(55);
 
-					case 50:
-						return _context.finish(43);
+					case 59:
+						return _context.finish(52);
 
-					case 51:
-						_context.next = 57;
+					case 60:
+						_context.next = 66;
 						break;
 
-					case 53:
-						_context.prev = 53;
+					case 62:
+						_context.prev = 62;
 						_context.t1 = _context['catch'](1);
-						_context.next = 57;
+						_context.next = 66;
 						return _SystemLog2.default.create({ title: 'update bet order result failed', content: '' + _context.t1, status: 'danger' });
 
-					case 57:
+					case 66:
 					case 'end':
 						return _context.stop();
 				}
 			}
-		}, _callee, undefined, [[1, 53], [10, 39, 43, 51], [44,, 46, 50]]);
+		}, _callee, undefined, [[1, 62], [10, 48, 52, 60], [53,, 55, 59]]);
 	}));
 
 	return function updateBetOrderResult() {

@@ -12,17 +12,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Schema = _mongoose2.default.Schema;
 
-var TransactionSchema = new Schema({
+var ReceiptSchema = new Schema({
 	Agent: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 	ID: { type: String, required: true },
-	type: { type: String, enum: ['BetOrder', 'Purchase', 'Bonus', 'CreatePlayer', 'ActionFee', 'Adjust'], required: true },
-	description: { type: String, required: true },
-	amount: { type: Number, required: true },
-	balance: { type: Number, required: true },
+	platform: { type: String, enum: ['ios', 'android'], required: true },
+	data: { type: String, required: true },
+	credit: { type: Number, required: true },
+	usd: { type: Number, required: true },
+	item: { type: String, required: true },
 	createdAt: { type: Date, default: Date.now }
 });
 
-var Transaction = _mongoose2.default.model('Transaction', TransactionSchema);
+var Receipt = _mongoose2.default.model('Receipt', ReceiptSchema);
 
-exports.default = Transaction;
-//# sourceMappingURL=Transaction.js.map
+exports.default = Receipt;
+//# sourceMappingURL=Receipt.js.map

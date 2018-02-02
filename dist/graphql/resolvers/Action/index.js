@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Mutation = exports.Query = undefined;
 
+var _config = require('../../../config');
+
+var _config2 = _interopRequireDefault(_config);
+
 var _Table = require('../../../models/Table');
 
 var _Table2 = _interopRequireDefault(_Table);
@@ -88,6 +92,14 @@ var _Transaction2 = _interopRequireDefault(_Transaction);
 var _PriceRate = require('../../../models/PriceRate');
 
 var _PriceRate2 = _interopRequireDefault(_PriceRate);
+
+var _apn = require('../../../apn');
+
+var _apn2 = _interopRequireDefault(_apn);
+
+var _apn3 = require('apn');
+
+var _apn4 = _interopRequireDefault(_apn3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -241,7 +253,7 @@ var Mutation = exports.Mutation = {
 		    toWin = _ref3.toWin,
 		    picks = _ref3.picks;
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-			var player, _generateAtRiskToWin, recalAtRisk, recalToWin, agentAvailableCredit, pickIDs, existedOpenBets, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, existedOpenBet, uniqEventIDs, mongooseEventIDs, latestEvents, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, pick, latestEvent, sport, league, period, cutOffAt, _latestEvent$team, away, home, eventDetail, latestOddPoint, latestOddLine, pickOddPoint, pickOddLine, oddUpdatedDetail, newBetOrder, savedBetOrder, newPicks, savedPickIDs, theBetOrder, agent, actionFee;
+			var player, _generateAtRiskToWin, recalAtRisk, recalToWin, agentAvailableCredit, pickIDs, existedOpenBets, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, existedOpenBet, uniqEventIDs, mongooseEventIDs, latestEvents, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, pick, latestEvent, sport, league, period, cutOffAt, _latestEvent$team, away, home, eventDetail, latestOddPoint, latestOddLine, pickOddPoint, pickOddLine, oddUpdatedDetail, newBetOrder, savedBetOrder, newPicks, savedPickIDs, theBetOrder, agent, actionFee, agentNotify;
 
 			return regeneratorRuntime.wrap(function _callee4$(_context4) {
 				while (1) {
@@ -617,23 +629,41 @@ var Mutation = exports.Mutation = {
 							return _SystemLog2.default.create({ title: 'New Open Bet Order', content: ctx.user.username + ' created a open bet ' + theBetOrder.title, status: 'success' });
 
 						case 128:
+							if (!agent.notification.afterWager) {
+								_context4.next = 133;
+								break;
+							}
+
+							agentNotify = new _apn4.default.Notification({
+								sound: 'ping.aiff',
+								alert: player.username + ' had submitted ' + theBetOrder.title + ', At Risk: ' + theBetOrder.bet.atRisk + ', To Win: ' + theBetOrder.bet.toWin,
+								topic: _config2.default.APN_TOPIC,
+								payload: { BetOrder: theBetOrder._id }
+							});
+							_context4.next = 132;
+							return _apn2.default.send(agentNotify, agent.notification.deviceToken);
+
+						case 132:
+							_apn2.default.shutdown();
+
+						case 133:
 							return _context4.abrupt('return', { title: 'SUCCESS', content: '#' + savedBetOrder.ID.toUpperCase() + ' CREATED', status: 'success' });
 
-						case 131:
-							_context4.prev = 131;
+						case 136:
+							_context4.prev = 136;
 							_context4.t2 = _context4['catch'](0);
-							_context4.next = 135;
+							_context4.next = 140;
 							return _SystemLog2.default.create({ title: 'New Open Bet Order Failed', content: ctx.user.username + ' created a open bet Failed ' + _context4.t2, status: 'danger' });
 
-						case 135:
+						case 140:
 							return _context4.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 136:
+						case 141:
 						case 'end':
 							return _context4.stop();
 					}
 				}
-			}, _callee4, _this4, [[0, 131], [33, 44, 48, 56], [49,, 51, 55], [66, 91, 95, 103], [96,, 98, 102]]);
+			}, _callee4, _this4, [[0, 136], [33, 44, 48, 56], [49,, 51, 55], [66, 91, 95, 103], [96,, 98, 102]]);
 		}))();
 	}
 };

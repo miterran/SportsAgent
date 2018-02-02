@@ -36,10 +36,6 @@ var _Transaction = require('./resolvers/Transaction');
 
 var Transaction = _interopRequireWildcard(_Transaction);
 
-var _Notification = require('./resolvers/Notification');
-
-var Notification = _interopRequireWildcard(_Notification);
-
 var _LogoCollect = require('./resolvers/LogoCollect');
 
 var LogoCollect = _interopRequireWildcard(_LogoCollect);
@@ -58,9 +54,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var rootResolvers = {
 	RootQuery: _lodash2.default.merge(Sign.Query, User.Query, Action.Query, BetOrder.Query, Event.Query, Transaction.Query, LogoCollect.Query, PriceRate.Query, SystemLog.Query),
-	RootMutation: _lodash2.default.merge(Sign.Mutation, Action.Mutation, Setting.Mutation, User.Mutation),
-	RootSubscription: _lodash2.default.merge(Notification.Subscription)
+	RootMutation: _lodash2.default.merge(Sign.Mutation, Action.Mutation, Setting.Mutation, User.Mutation, Transaction.Mutation)
+	// 	RootSubscription: _.merge(
+	// //		Notification.Subscription
+	// 	)
 };
-
+//import * as Notification from './resolvers/Notification';
 exports.default = rootResolvers;
 //# sourceMappingURL=rootResolvers.js.map

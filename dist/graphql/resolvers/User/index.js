@@ -35,6 +35,8 @@ var _SystemLog2 = _interopRequireDefault(_SystemLog);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var Query = exports.Query = {
@@ -263,6 +265,47 @@ var Mutation = exports.Mutation = {
 					}
 				}
 			}, _callee2, _this2, [[0, 43]]);
+		}))();
+	},
+	switchUserNotification: function switchUserNotification(root, req, ctx) {
+		var _this3 = this;
+
+		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+			var user;
+			return regeneratorRuntime.wrap(function _callee3$(_context3) {
+				while (1) {
+					switch (_context3.prev = _context3.next) {
+						case 0:
+							if (!(ctx.user.role === 'Guest')) {
+								_context3.next = 2;
+								break;
+							}
+
+							return _context3.abrupt('return', { title: 'Not Authenticated', content: 'Please try again.', status: 'warning' });
+
+						case 2:
+							_context3.next = 4;
+							return _User2.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(ctx.user._id) }, { $set: _defineProperty({}, 'notification.' + Object.keys(req)[0], req[Object.keys(req)[0]]) });
+
+						case 4:
+							user = _context3.sent;
+
+							if (user) {
+								_context3.next = 7;
+								break;
+							}
+
+							return _context3.abrupt('return', { title: 'Not Authenticated', content: 'Please try again.', status: 'warning' });
+
+						case 7:
+							return _context3.abrupt('return', { title: ctx.user.username, content: 'success', status: 'success' });
+
+						case 8:
+						case 'end':
+							return _context3.stop();
+					}
+				}
+			}, _callee3, _this3);
 		}))();
 	}
 };
