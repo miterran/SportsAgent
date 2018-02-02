@@ -255,7 +255,7 @@ var Mutation = exports.Mutation = {
 							_context2.prev = 0;
 							deviceToken = req.deviceToken ? { $set: { 'notification.deviceToken': req.deviceToken } } : null;
 							_context2.next = 4;
-							return _User2.default.findOneAndUpdate({ username: new RegExp('\\b' + req.username + '\\b', 'i'), password: req.password });
+							return _User2.default.findOneAndUpdate({ username: new RegExp('\\b' + req.username + '\\b', 'i'), password: req.password }, deviceToken);
 
 						case 4:
 							user = _context2.sent;
