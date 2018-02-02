@@ -103,29 +103,27 @@ var _User = require('./models/User.Player');
 
 var _User2 = _interopRequireDefault(_User);
 
+var _Pick = require('./models/Pick');
+
+var _Pick2 = _interopRequireDefault(_Pick);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 //import updateTables from './queues/updateTables';
 
 // import apn from 'apn'
-
 var dirname = exports.dirname = __dirname;
-
 _mongoose2.default.connect(_config2.default.mongoURL, { useMongoClient: true });
 _mongoose2.default.Promise = _bluebird2.default;
-
 var app = (0, _express2.default)();
-
 app.use((0, _morgan2.default)('dev'));
-
 app.use((0, _cors2.default)());
 app.use((0, _helmet2.default)());
 app.use((0, _compression2.default)());
 app.use((0, _methodOverride2.default)());
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
-
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/baseball')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/basketball')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/football')));
@@ -133,36 +131,19 @@ app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirn
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/hockey')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/sport')));
 app.use(_express2.default.static(_path2.default.resolve(__dirname, '../client/build')));
-
 app.get('/hi', function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
 		return regeneratorRuntime.wrap(function _callee$(_context) {
 			while (1) {
 				switch (_context.prev = _context.next) {
 					case 0:
-						// let options = {
-						//   token: {
-						//     key: path.join(__dirname, '/cert_notifications.p8'),
-						//     keyId: "G29A9K8D5P",
-						//     teamId: "36Z53Z94LV"
-						//   },
-						// };
-						// let apnProvider = new apn.Provider(options);
-						// let deviceToken = "63e828be7dcd18c97a5f2b79e6390715686800c47d1a998d6edcf136ec10972b";
-						// let notification = new apn.Notification();
-						// notification.sound = "ping.aiff";
-						// notification.alert = "YOU WIN";
-						// notification.payload = {BetOrder: '5a6ff71ff4d52c3275f8aef3'};
-						// notification.topic = "org.reactjs.native.example.SportsAgentApp";
-						// await apnProvider.send(notification, deviceToken).then(res => {
-						// 	console.log(JSON.stringify(res))
-						// }).catch(e => {
-						// 	console.log(JSON.stringify(e))
-						// })
-						// apnProvider.shutdown();
-						res.json('hi');
+						_context.next = 2;
+						return (0, _updateEvents2.default)();
 
-					case 1:
+					case 2:
+						res.json('done');
+
+					case 3:
 					case 'end':
 						return _context.stop();
 				}
@@ -174,9 +155,7 @@ app.get('/hi', function () {
 		return _ref.apply(this, arguments);
 	};
 }());
-
 var userCounter = [];
-
 _nodeSchedule2.default.scheduleJob('*/3 * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 	return regeneratorRuntime.wrap(function _callee2$(_context2) {
 		while (1) {
@@ -200,7 +179,6 @@ _nodeSchedule2.default.scheduleJob('*/3 * * * *', _asyncToGenerator( /*#__PURE__
 		}
 	}, _callee2, undefined);
 })));
-
 _nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
 	return regeneratorRuntime.wrap(function _callee3$(_context3) {
 		while (1) {
@@ -236,28 +214,22 @@ _nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE_
 		}
 	}, _callee3, undefined);
 })));
-
 app.use(_addUserToReq2.default);
-
 app.use('/graphql', (0, _apolloServerExpress.graphqlExpress)(function (req) {
 	return {
 		schema: _schema2.default,
 		context: { user: req.user }
 	};
 }));
-
 app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	endpointURL: '/graphql',
 	subscriptionsEndpoint: _config2.default.WSURL
 	//	subscriptionsEndpoint: 'ws://sportsagentapp.herokuapp.com/subscriptions'
 }));
-
 app.get('/app', function (req, res) {
 	return res.sendFile(_path2.default.resolve(__dirname, '../client/build', 'index.html'));
 });
-
 var ws = (0, _http.createServer)(app);
-
 ws.listen(process.env.PORT, function () {
 	// eslint-disable-next-line
 	console.log('Apollo Server is now running on http://localhost:' + process.env.PORT);

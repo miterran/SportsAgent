@@ -641,7 +641,9 @@ var Mutation = exports.Mutation = {
 								payload: { BetOrder: theBetOrder._id }
 							});
 							_context4.next = 132;
-							return _apn2.default.send(agentNotify, agent.notification.deviceToken);
+							return _apn2.default.send(agentNotify, agent.notification.deviceToken).then(function (res) {
+								return console.log(res);
+							});
 
 						case 132:
 							_apn2.default.shutdown();

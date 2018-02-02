@@ -123,7 +123,7 @@ var updateEventOddFromPickMon = function () {
 
 					case 22:
 						if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-							_context.next = 71;
+							_context.next = 73;
 							break;
 						}
 
@@ -135,7 +135,7 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 68);
+						return _context.abrupt('continue', 70);
 
 					case 27:
 						thePeriod = (0, _renameEventPeriod2.default)(event.line.perioddesc);
@@ -145,7 +145,7 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 68);
+						return _context.abrupt('continue', 70);
 
 					case 30:
 						theMatchTime = _moment2.default.utc(event.gamedate).add(5, 'h');
@@ -155,7 +155,7 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 68);
+						return _context.abrupt('continue', 70);
 
 					case 33:
 						theOddCutOffTime = _moment2.default.utc(event.line.wagercutoff).add(5, 'h');
@@ -165,9 +165,17 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 68);
+						return _context.abrupt('continue', 70);
 
 					case 36:
+						if (!(0, _moment2.default)().add(1, 'h').isBefore(theOddCutOffTime)) {
+							_context.next = 38;
+							break;
+						}
+
+						return _context.abrupt('continue', 70);
+
+					case 38:
 						theLeague = (0, _renameLeague2.default)(theSport, event.sportsubtype);
 						theAwayPitcher = theSport === 'Baseball' ? !_lodash2.default.isEmpty(event.team1.pitcher) ? event.team1.pitcher : 'Action' : null;
 						theHomePitcher = theSport === 'Baseball' ? !_lodash2.default.isEmpty(event.team2.pitcher) ? event.team2.pitcher : 'Action' : null;
@@ -206,36 +214,36 @@ var updateEventOddFromPickMon = function () {
 							detail: event.team1.name + ' ' + theAwayROT + ' vs ' + event.team2.name + ' ' + theHomeROT
 						};
 						folderName = theLeague === 'NCAAB' || theLeague === 'NCAAF' ? 'NCAA' : theSport;
-						_context.next = 55;
+						_context.next = 57;
 						return (0, _fileExists2.default)(_index.dirname + ('/public/images/teamlogos/' + folderName + '/' + awayLogo.name + '.png'));
 
-					case 55:
+					case 57:
 						awayLogoExists = _context.sent;
 
 						if (awayLogoExists) {
-							_context.next = 59;
+							_context.next = 61;
 							break;
 						}
 
-						_context.next = 59;
+						_context.next = 61;
 						return _LogoCollect2.default.findOneAndUpdate({ name: awayLogo.name }, awayLogo, { upsert: true });
 
-					case 59:
-						_context.next = 61;
+					case 61:
+						_context.next = 63;
 						return (0, _fileExists2.default)(_index.dirname + ('/public/images/teamlogos/' + folderName + '/' + homeLogo.name + '.png'));
 
-					case 61:
+					case 63:
 						homeLogoExists = _context.sent;
 
 						if (homeLogoExists) {
-							_context.next = 65;
+							_context.next = 67;
 							break;
 						}
 
-						_context.next = 65;
+						_context.next = 67;
 						return _LogoCollect2.default.findOneAndUpdate({ name: homeLogo.name }, homeLogo, { upsert: true });
 
-					case 65:
+					case 67:
 						//
 
 						newEvent = {
@@ -279,64 +287,64 @@ var updateEventOddFromPickMon = function () {
 							status: 'Pending',
 							updatedAt: (0, _moment2.default)()
 						};
-						_context.next = 68;
+						_context.next = 70;
 						return _Event2.default.findOneAndUpdate({ uniqueID: newEvent.uniqueID, status: 'Pending' }, newEvent, { upsert: true });
 
-					case 68:
+					case 70:
 						_iteratorNormalCompletion = true;
 						_context.next = 22;
 						break;
 
-					case 71:
-						_context.next = 77;
+					case 73:
+						_context.next = 79;
 						break;
 
-					case 73:
-						_context.prev = 73;
+					case 75:
+						_context.prev = 75;
 						_context.t0 = _context['catch'](20);
 						_didIteratorError = true;
 						_iteratorError = _context.t0;
 
-					case 77:
-						_context.prev = 77;
-						_context.prev = 78;
+					case 79:
+						_context.prev = 79;
+						_context.prev = 80;
 
 						if (!_iteratorNormalCompletion && _iterator.return) {
 							_iterator.return();
 						}
 
-					case 80:
-						_context.prev = 80;
+					case 82:
+						_context.prev = 82;
 
 						if (!_didIteratorError) {
-							_context.next = 83;
+							_context.next = 85;
 							break;
 						}
 
 						throw _iteratorError;
 
-					case 83:
-						return _context.finish(80);
-
-					case 84:
-						return _context.finish(77);
-
 					case 85:
-						_context.next = 91;
-						break;
+						return _context.finish(82);
+
+					case 86:
+						return _context.finish(79);
 
 					case 87:
-						_context.prev = 87;
+						_context.next = 93;
+						break;
+
+					case 89:
+						_context.prev = 89;
 						_context.t1 = _context['catch'](0);
-						_context.next = 91;
+						_context.next = 93;
 						return _SystemLog2.default.create({ title: 'update pick mon event failed', content: '' + _context.t1, status: 'danger' });
 
-					case 91:
+					case 93:
 					case 'end':
 						return _context.stop();
 				}
 			}
-		}, _callee, undefined, [[0, 87], [20, 73, 77, 85], [78,, 80, 84]]);
+		}, _callee, undefined, [[0, 89], [20, 75, 79, 87], [80,, 82, 86]]);
 	}));
 
 	return function updateEventOddFromPickMon() {
