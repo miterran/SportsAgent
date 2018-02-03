@@ -253,7 +253,7 @@ var Mutation = exports.Mutation = {
 		    toWin = _ref3.toWin,
 		    picks = _ref3.picks;
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-			var player, _generateAtRiskToWin, recalAtRisk, recalToWin, agentAvailableCredit, pickIDs, existedOpenBets, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, existedOpenBet, uniqEventIDs, mongooseEventIDs, latestEvents, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, pick, latestEvent, sport, league, period, cutOffAt, _latestEvent$team, away, home, eventDetail, latestOddPoint, latestOddLine, pickOddPoint, pickOddLine, oddUpdatedDetail, newBetOrder, savedBetOrder, newPicks, savedPickIDs, theBetOrder, agent, actionFee, agentNotify;
+			var player, _generateAtRiskToWin, recalAtRisk, recalToWin, agentAvailableCredit, pickIDs, existedOpenBets, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, existedOpenBet, uniqEventIDs, mongooseEventIDs, latestEvents, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, pick, latestEvent, sport, league, period, cutOffAt, _latestEvent$team, away, home, eventDetail, latestOddPoint, latestOddLine, pickOddPoint, pickOddLine, oddUpdatedDetail, newBetOrder, savedBetOrder, newPicks, savedPickIDs, theBetOrder, actionFee, agent, agentNotify;
 
 			return regeneratorRuntime.wrap(function _callee4$(_context4) {
 				while (1) {
@@ -601,25 +601,25 @@ var Mutation = exports.Mutation = {
 						case 115:
 							theBetOrder = _context4.sent;
 							_context4.next = 118;
-							return _User4.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(ctx.user._id) }, { $inc: { 'credit.pending': atRisk }, $set: { 'credit.updatedAt': (0, _moment2.default)() } });
-
-						case 118:
-							_context4.next = 120;
-							return _User2.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(player.Agent) }, { $inc: { 'credit.pending': atRisk, 'credit.balance': -10 }, $set: { 'credit.updatedAt': (0, _moment2.default)() } }, { new: true });
-
-						case 120:
-							agent = _context4.sent;
-							_context4.next = 123;
 							return _PriceRate2.default.findOne({ item: 'PlayerActionFee' });
 
-						case 123:
+						case 118:
 							actionFee = _context4.sent;
+							_context4.next = 121;
+							return _User4.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(ctx.user._id) }, { $inc: { 'credit.pending': atRisk }, $set: { 'credit.updatedAt': (0, _moment2.default)() } });
+
+						case 121:
+							_context4.next = 123;
+							return _User2.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(player.Agent) }, { $inc: { 'credit.pending': atRisk, 'credit.balance': actionFee.credit }, $set: { 'credit.updatedAt': (0, _moment2.default)() } }, { new: true });
+
+						case 123:
+							agent = _context4.sent;
 							_context4.next = 126;
 							return _Transaction2.default.create({
 								Agent: agent._id,
 								ID: savedBetOrder.ID,
 								type: 'ActionFee',
-								description: '(' + ctx.user.username + ') Action Fee',
+								description: '(' + ctx.user.username + ') Transaction (Bet) Fee',
 								amount: actionFee.credit,
 								balance: agent.credit.balance
 							});
@@ -636,7 +636,7 @@ var Mutation = exports.Mutation = {
 
 							agentNotify = new _apn4.default.Notification({
 								sound: 'ping.aiff',
-								alert: player.username + ' had submitted ' + theBetOrder.title + ', At Risk: ' + theBetOrder.bet.atRisk + ', To Win: ' + theBetOrder.bet.toWin,
+								alert: player.username + ' had submitted a ' + theBetOrder.title + ', At Risk: ' + theBetOrder.bet.atRisk + ', To Win: ' + theBetOrder.bet.toWin,
 								topic: _config2.default.APN_TOPIC,
 								payload: { BetOrder: theBetOrder._id }
 							});

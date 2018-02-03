@@ -133,8 +133,6 @@ var updateBetOrderResult = function () {
 							'$set': {
 								'credit.updatedAt': (0, _moment2.default)()
 							}
-						}, {
-							new: true
 						});
 
 					case 27:
