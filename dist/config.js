@@ -34,7 +34,8 @@ var envVarsSchema = _joi2.default.object({
 	MK: _joi2.default.string().required().description('MK'),
 	APPLE_KEY_ID: _joi2.default.string().required().description('G29A9K8D5P'),
 	APPLE_TEAM_ID: _joi2.default.string().required().description('36Z53Z94LV'),
-	APN_TOPIC: _joi2.default.string().required().description('org.reactjs.native.example.SportsAgentApp')
+	APN_TOPIC: _joi2.default.string().required().description('org.reactjs.native.example.SportsAgentApp'),
+	UPDATE_ODD_MIN: _joi2.default.string().required().description('update odd every ? min')
 }).unknown().required();
 
 var _Joi$validate = _joi2.default.validate(process.env, envVarsSchema),
@@ -61,7 +62,8 @@ var config = {
 	MK: envVars.MK,
 	APPLE_KEY_ID: envVars.APPLE_KEY_ID,
 	APPLE_TEAM_ID: envVars.APPLE_TEAM_ID,
-	APN_TOPIC: envVars.APN_TOPIC
+	APN_TOPIC: envVars.APN_TOPIC,
+	UPDATE_ODD_MIN: envVars.UPDATE_ODD_MIN
 };
 
 exports.default = config;

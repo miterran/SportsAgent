@@ -107,18 +107,13 @@ var _Pick = require('./models/Pick');
 
 var _Pick2 = _interopRequireDefault(_Pick);
 
-var _apn = require('./apn');
-
-var _apn2 = _interopRequireDefault(_apn);
-
-var _apn3 = require('apn');
-
-var _apn4 = _interopRequireDefault(_apn3);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 //import updateTables from './queues/updateTables';
+
+// import apnProvider from './apn'
+// import apn from 'apn'
 
 var dirname = exports.dirname = __dirname;
 _mongoose2.default.connect(_config2.default.mongoURL, { useMongoClient: true });
@@ -161,7 +156,8 @@ app.get('/hi', function () {
 }());
 
 var userCounter = [];
-_nodeSchedule2.default.scheduleJob('*/3 * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+
+_nodeSchedule2.default.scheduleJob('*/' + _config2.default.UPDATE_ODD_MIN + ' * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 	return regeneratorRuntime.wrap(function _callee2$(_context2) {
 		while (1) {
 			switch (_context2.prev = _context2.next) {
@@ -224,18 +220,21 @@ _nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE_
 
 
 app.use(_addUserToReq2.default);
+
 app.use('/graphql', (0, _apolloServerExpress.graphqlExpress)(function (req) {
 	return {
 		schema: _schema2.default,
 		context: { user: req.user }
 	};
 }));
+
 app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	endpointURL: '/graphql',
 	subscriptionsEndpoint: _config2.default.WSURL
 }));
 
 var ws = (0, _http.createServer)(app);
+
 ws.listen(process.env.PORT, function () {
 	// eslint-disable-next-line
 	console.log('Apollo Server is now running on http://localhost:' + process.env.PORT);

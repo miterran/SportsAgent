@@ -430,34 +430,35 @@ var Mutation = exports.Mutation = {
 							return _context4.finish(48);
 
 						case 56:
-							_context4.next = 58;
-							return (0, _updateEvents2.default)();
+							//
 
-						case 58:
+							// check latest odd
+							//			await updateEvents();
+
 							uniqEventIDs = _lodash2.default.uniqBy(picks.map(function (pick) {
 								return pick.Event;
 							}));
 							mongooseEventIDs = uniqEventIDs.map(function (eventID) {
 								return { _id: _mongoose2.default.Types.ObjectId(eventID) };
 							});
-							_context4.next = 62;
+							_context4.next = 60;
 							return _Event2.default.find({ $or: mongooseEventIDs }).then(function (events) {
 								return events.map(function (event) {
 									event.action = action;return event;
 								});
 							});
 
-						case 62:
+						case 60:
 							latestEvents = _context4.sent;
 							_iteratorNormalCompletion2 = true;
 							_didIteratorError2 = false;
 							_iteratorError2 = undefined;
-							_context4.prev = 66;
+							_context4.prev = 64;
 							_iterator2 = picks[Symbol.iterator]();
 
-						case 68:
+						case 66:
 							if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-								_context4.next = 89;
+								_context4.next = 87;
 								break;
 							}
 
@@ -465,32 +466,32 @@ var Mutation = exports.Mutation = {
 							latestEvent = _lodash2.default.find(latestEvents, { _id: _mongoose2.default.Types.ObjectId(pick.Event) });
 
 							if (latestEvent) {
-								_context4.next = 73;
+								_context4.next = 71;
 								break;
 							}
 
 							return _context4.abrupt('return', { title: 'Event Error', content: 'Please pick other event.', status: 'warning' });
 
-						case 73:
+						case 71:
 							sport = latestEvent.sport, league = latestEvent.league, period = latestEvent.period, cutOffAt = latestEvent.cutOffAt, _latestEvent$team = latestEvent.team, away = _latestEvent$team.away, home = _latestEvent$team.home;
 							eventDetail = sport + ' ' + league + ' ' + period + ',' + away + ' vs ' + home;
 
 							if (!latestEvent.isOddExpired) {
-								_context4.next = 77;
+								_context4.next = 75;
 								break;
 							}
 
 							return _context4.abrupt('return', { title: 'Odd Expired ' + (0, _moment2.default)(cutOffAt).format('hh:mm A'), content: eventDetail, status: 'warning' });
 
-						case 77:
+						case 75:
 							if (latestEvent.isActionOddActivate) {
-								_context4.next = 79;
+								_context4.next = 77;
 								break;
 							}
 
 							return _context4.abrupt('return', { title: 'Event Not Available', content: eventDetail, status: 'warning' });
 
-						case 79:
+						case 77:
 							latestOddPoint = latestEvent.actionOdd[pick.marked.oddPointTarget] || null;
 							latestOddLine = latestEvent.actionOdd[pick.marked.oddLineTarget] || null;
 							pickOddPoint = pick.marked.oddPoint || null;
@@ -498,56 +499,56 @@ var Mutation = exports.Mutation = {
 							oddUpdatedDetail = pick.marked.oddType + ' ' + pick.marked.oddTarget + ' ' + (pickOddPoint ? '( ' + pickOddPoint + ' ) ' : '') + pickOddLine + ' to ' + (latestOddPoint ? '( ' + latestOddPoint + ' ) ' : '') + latestOddLine;
 
 							if (!(latestOddPoint !== pickOddPoint || latestOddLine !== pickOddLine)) {
-								_context4.next = 86;
+								_context4.next = 84;
 								break;
 							}
 
 							return _context4.abrupt('return', { title: 'Odd Has Update', content: eventDetail + ', ' + oddUpdatedDetail, status: 'warning' });
 
-						case 86:
+						case 84:
 							_iteratorNormalCompletion2 = true;
-							_context4.next = 68;
+							_context4.next = 66;
+							break;
+
+						case 87:
+							_context4.next = 93;
 							break;
 
 						case 89:
-							_context4.next = 95;
-							break;
-
-						case 91:
-							_context4.prev = 91;
-							_context4.t1 = _context4['catch'](66);
+							_context4.prev = 89;
+							_context4.t1 = _context4['catch'](64);
 							_didIteratorError2 = true;
 							_iteratorError2 = _context4.t1;
 
-						case 95:
-							_context4.prev = 95;
-							_context4.prev = 96;
+						case 93:
+							_context4.prev = 93;
+							_context4.prev = 94;
 
 							if (!_iteratorNormalCompletion2 && _iterator2.return) {
 								_iterator2.return();
 							}
 
-						case 98:
-							_context4.prev = 98;
+						case 96:
+							_context4.prev = 96;
 
 							if (!_didIteratorError2) {
-								_context4.next = 101;
+								_context4.next = 99;
 								break;
 							}
 
 							throw _iteratorError2;
 
+						case 99:
+							return _context4.finish(96);
+
+						case 100:
+							return _context4.finish(93);
+
 						case 101:
-							return _context4.finish(98);
-
-						case 102:
-							return _context4.finish(95);
-
-						case 103:
-							_context4.next = 105;
+							_context4.next = 103;
 							return _Event2.default.update({ $or: mongooseEventIDs }, { $set: { isPicked: true } }, { multi: true });
 
-						case 105:
+						case 103:
 							newBetOrder = new _BetOrder2.default({
 								ID: _uniqid2.default.process(),
 								Player: ctx.user._id,
@@ -566,10 +567,10 @@ var Mutation = exports.Mutation = {
 								updatedAt: (0, _moment2.default)(),
 								createdAt: (0, _moment2.default)()
 							});
-							_context4.next = 108;
+							_context4.next = 106;
 							return newBetOrder.save();
 
-						case 108:
+						case 106:
 							savedBetOrder = _context4.sent;
 							newPicks = picks.map(function (pick) {
 								return new _Pick2.default({
@@ -586,35 +587,35 @@ var Mutation = exports.Mutation = {
 									created: (0, _moment2.default)()
 								});
 							});
-							_context4.next = 112;
+							_context4.next = 110;
 							return _Pick2.default.insertMany(newPicks).then(function (picks) {
 								return picks.map(function (pick) {
 									return pick._id;
 								});
 							});
 
-						case 112:
+						case 110:
 							savedPickIDs = _context4.sent;
-							_context4.next = 115;
+							_context4.next = 113;
 							return _BetOrder2.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(savedBetOrder._id) }, { $set: { Picks: savedPickIDs } }, { new: true });
 
-						case 115:
+						case 113:
 							theBetOrder = _context4.sent;
-							_context4.next = 118;
+							_context4.next = 116;
 							return _PriceRate2.default.findOne({ item: 'PlayerActionFee' });
 
-						case 118:
+						case 116:
 							actionFee = _context4.sent;
-							_context4.next = 121;
+							_context4.next = 119;
 							return _User4.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(ctx.user._id) }, { $inc: { 'credit.pending': atRisk }, $set: { 'credit.updatedAt': (0, _moment2.default)() } });
 
-						case 121:
-							_context4.next = 123;
+						case 119:
+							_context4.next = 121;
 							return _User2.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(player.Agent) }, { $inc: { 'credit.pending': atRisk, 'credit.balance': actionFee.credit }, $set: { 'credit.updatedAt': (0, _moment2.default)() } }, { new: true });
 
-						case 123:
+						case 121:
 							agent = _context4.sent;
-							_context4.next = 126;
+							_context4.next = 124;
 							return _Transaction2.default.create({
 								Agent: agent._id,
 								ID: savedBetOrder.ID,
@@ -624,13 +625,13 @@ var Mutation = exports.Mutation = {
 								balance: agent.credit.balance
 							});
 
-						case 126:
-							_context4.next = 128;
+						case 124:
+							_context4.next = 126;
 							return _SystemLog2.default.create({ title: 'New Open Bet Order', content: ctx.user.username + ' created a open bet ' + theBetOrder.title, status: 'success' });
 
-						case 128:
+						case 126:
 							if (!agent.notification.afterWager) {
-								_context4.next = 133;
+								_context4.next = 131;
 								break;
 							}
 
@@ -640,32 +641,32 @@ var Mutation = exports.Mutation = {
 								topic: _config2.default.APN_TOPIC,
 								payload: { BetOrder: theBetOrder._id }
 							});
-							_context4.next = 132;
+							_context4.next = 130;
 							return _apn2.default.send(agentNotify, agent.notification.deviceToken).then(function (res) {
 								return console.log(res);
 							});
 
-						case 132:
+						case 130:
 							_apn2.default.shutdown();
 
-						case 133:
+						case 131:
 							return _context4.abrupt('return', { title: 'SUCCESS', content: '#' + savedBetOrder.ID.toUpperCase() + ' CREATED', status: 'success' });
 
-						case 136:
-							_context4.prev = 136;
+						case 134:
+							_context4.prev = 134;
 							_context4.t2 = _context4['catch'](0);
-							_context4.next = 140;
+							_context4.next = 138;
 							return _SystemLog2.default.create({ title: 'New Open Bet Order Failed', content: ctx.user.username + ' created a open bet Failed ' + _context4.t2, status: 'danger' });
 
-						case 140:
+						case 138:
 							return _context4.abrupt('return', { title: 'Unknow Error', content: 'Please try again later!', status: 'danger' });
 
-						case 141:
+						case 139:
 						case 'end':
 							return _context4.stop();
 					}
 				}
-			}, _callee4, _this4, [[0, 136], [33, 44, 48, 56], [49,, 51, 55], [66, 91, 95, 103], [96,, 98, 102]]);
+			}, _callee4, _this4, [[0, 134], [33, 44, 48, 56], [49,, 51, 55], [64, 89, 93, 101], [94,, 96, 100]]);
 		}))();
 	}
 };
