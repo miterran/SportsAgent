@@ -140,6 +140,17 @@ app.get('/hi', function () {
 			while (1) {
 				switch (_context.prev = _context.next) {
 					case 0:
+
+						// const agentNotify = new apn.Notification({
+						// 	sound: 'ping.aiff',
+						// 	alert: `收吾收到啊`,
+						// 	topic: config.APN_TOPIC,
+						// 	payload: { BetOrder: 'test' }
+						// })
+
+						// await apnProvider.send(agentNotify, '671c147576304b7ccb4b9b327149273ce701256af01f553555e7c13d5ff7b639').then(res => console.log(res))
+						// apnProvider.shutdown();
+
 						res.json('done');
 
 					case 1:

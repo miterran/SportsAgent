@@ -24,7 +24,9 @@ var options = {
 		keyId: _config2.default.APPLE_KEY_ID,
 		teamId: _config2.default.APPLE_TEAM_ID
 	},
-	production: false
+	cert: _path2.default.join(__dirname, '/cert.pem'),
+	key: _path2.default.join(__dirname, '/key.pem')
+	//	production: true
 };
 
 exports.default = new _apn2.default.Provider(options);
