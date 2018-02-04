@@ -46,7 +46,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var updatePickResult = function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-		var picks, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pick, _pick$Event, eventStatus, _pick$Event$score, homeScore, awayScore, pickStatus, isClosed, newPick, agentNotify, playerNotify;
+		var picks, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pick, _pick$Event, eventStatus, _pick$Event$score, homeScore, awayScore, pickStatus, isClosed, updatedPick, agentNotify, playerNotify;
 
 		return regeneratorRuntime.wrap(function _callee$(_context) {
 			while (1) {
@@ -81,7 +81,7 @@ var updatePickResult = function () {
 
 					case 12:
 						if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-							_context.next = 36;
+							_context.next = 39;
 							break;
 						}
 
@@ -107,104 +107,113 @@ var updatePickResult = function () {
 						}).populate('Event').populate('Agent').populate('Player');
 
 					case 21:
-						newPick = _context.sent;
+						updatedPick = _context.sent;
 
-						if (isClosed) {
-							_context.next = 24;
+						if (!(updatedPick.status === 'Review')) {
+							_context.next = 25;
 							break;
 						}
 
-						return _context.abrupt('continue', 33);
+						_context.next = 25;
+						return _SystemLog2.default.create({ title: 'Pick has Review', content: '' + updatedPick._id, status: 'danger' });
 
-					case 24:
-						if (!newPick.Agent.notification.afterPick) {
-							_context.next = 28;
+					case 25:
+						if (isClosed) {
+							_context.next = 27;
+							break;
+						}
+
+						return _context.abrupt('continue', 36);
+
+					case 27:
+						if (!updatedPick.Agent.notification.afterPick) {
+							_context.next = 31;
 							break;
 						}
 
 						agentNotify = new _apn4.default.Notification({
 							sound: 'ping.aiff',
-							alert: newPick.Player.username + '\'s Pick had ' + newPick.status + ', ' + newPick.Event.team.away + ' vs ' + newPick.Event.team.home,
+							alert: updatedPick.Player.username + '\'s Pick had ' + updatedPick.status + ', ' + updatedPick.Event.team.away + ' vs ' + updatedPick.Event.team.home,
 							topic: _config2.default.APN_TOPIC,
-							payload: { BetOrder: newPick.BetOrder }
+							payload: { BetOrder: updatedPick.BetOrder }
 						});
-						_context.next = 28;
-						return _apn2.default.send(agentNotify, newPick.Agent.notification.deviceToken);
+						_context.next = 31;
+						return _apn2.default.send(agentNotify, updatedPick.Agent.notification.deviceToken);
 
-					case 28:
-						if (!newPick.Player.notification.afterPick) {
-							_context.next = 32;
+					case 31:
+						if (!updatedPick.Player.notification.afterPick) {
+							_context.next = 35;
 							break;
 						}
 
 						playerNotify = new _apn4.default.Notification({
 							sound: 'ping.aiff',
-							alert: 'Your Pick had ' + newPick.status + ', ' + newPick.Event.team.away + ' vs ' + newPick.Event.team.home,
+							alert: 'Your Pick had ' + updatedPick.status + ', ' + updatedPick.Event.team.away + ' vs ' + updatedPick.Event.team.home,
 							topic: _config2.default.APN_TOPIC,
-							payload: { BetOrder: newPick.BetOrder }
+							payload: { BetOrder: updatedPick.BetOrder }
 						});
-						_context.next = 32;
-						return _apn2.default.send(playerNotify, newPick.Player.notification.deviceToken);
+						_context.next = 35;
+						return _apn2.default.send(playerNotify, updatedPick.Player.notification.deviceToken);
 
-					case 32:
+					case 35:
 
 						_apn2.default.shutdown();
 
-					case 33:
+					case 36:
 						_iteratorNormalCompletion = true;
 						_context.next = 12;
 						break;
 
-					case 36:
-						_context.next = 42;
+					case 39:
+						_context.next = 45;
 						break;
 
-					case 38:
-						_context.prev = 38;
+					case 41:
+						_context.prev = 41;
 						_context.t0 = _context['catch'](10);
 						_didIteratorError = true;
 						_iteratorError = _context.t0;
 
-					case 42:
-						_context.prev = 42;
-						_context.prev = 43;
+					case 45:
+						_context.prev = 45;
+						_context.prev = 46;
 
 						if (!_iteratorNormalCompletion && _iterator.return) {
 							_iterator.return();
 						}
 
-					case 45:
-						_context.prev = 45;
+					case 48:
+						_context.prev = 48;
 
 						if (!_didIteratorError) {
-							_context.next = 48;
+							_context.next = 51;
 							break;
 						}
 
 						throw _iteratorError;
 
-					case 48:
-						return _context.finish(45);
-
-					case 49:
-						return _context.finish(42);
-
-					case 50:
-						_context.next = 56;
-						break;
+					case 51:
+						return _context.finish(48);
 
 					case 52:
-						_context.prev = 52;
+						return _context.finish(45);
+
+					case 53:
+						_context.next = 59;
+						break;
+
+					case 55:
+						_context.prev = 55;
 						_context.t1 = _context['catch'](1);
-						_context.next = 56;
+						_context.next = 59;
 						return _SystemLog2.default.create({ title: 'update picks result failed', content: '' + _context.t1, status: 'danger' });
 
-					case 56:
+					case 59:
 					case 'end':
 						return _context.stop();
 				}
 			}
-		}, _callee, undefined, [[1, 52], [10, 38, 42, 50], [43,, 45, 49]]);
+		}, _callee, undefined, [[1, 55], [10, 41, 45, 53], [46,, 48, 52]]);
 	}));
 
 	return function updatePickResult() {

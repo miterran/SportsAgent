@@ -46,7 +46,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var pickMon = function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-		var pickMonSport, pickMonEventIDs, pickMonXML, pickMonScores, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pickMonEventID, eventScore, status, isFinished, homeScore, awayScore, update;
+		var pickMonSport, pickMonEventIDs, pickMonXML, pickMonScores, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pickMonEventID, eventScore, status, isFinished, homeScore, awayScore, update, updatedEvent;
 
 		return regeneratorRuntime.wrap(function _callee$(_context) {
 			while (1) {
@@ -114,7 +114,7 @@ var pickMon = function () {
 
 					case 23:
 						if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-							_context.next = 39;
+							_context.next = 43;
 							break;
 						}
 
@@ -126,7 +126,7 @@ var pickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 36);
+						return _context.abrupt('continue', 40);
 
 					case 28:
 						status = 'Review';
@@ -150,63 +150,74 @@ var pickMon = function () {
 							updatedAt: (0, _moment2.default)()
 						};
 						_context.next = 36;
-						return _Event2.default.findOneAndUpdate({ ID: pickMonEventID, provider: 'pm', status: 'Pending' }, { $set: update });
+						return _Event2.default.findOneAndUpdate({ ID: pickMonEventID, provider: 'pm', status: 'Pending' }, { $set: update }, { new: true });
 
 					case 36:
+						updatedEvent = _context.sent;
+
+						if (!(updatedEvent.status === 'Review')) {
+							_context.next = 40;
+							break;
+						}
+
+						_context.next = 40;
+						return _SystemLog2.default.create({ title: 'PickMon Event has Review', content: '' + updatedEvent._id, status: 'danger' });
+
+					case 40:
 						_iteratorNormalCompletion = true;
 						_context.next = 23;
 						break;
 
-					case 39:
-						_context.next = 45;
+					case 43:
+						_context.next = 49;
 						break;
 
-					case 41:
-						_context.prev = 41;
+					case 45:
+						_context.prev = 45;
 						_context.t0 = _context['catch'](21);
 						_didIteratorError = true;
 						_iteratorError = _context.t0;
 
-					case 45:
-						_context.prev = 45;
-						_context.prev = 46;
+					case 49:
+						_context.prev = 49;
+						_context.prev = 50;
 
 						if (!_iteratorNormalCompletion && _iterator.return) {
 							_iterator.return();
 						}
 
-					case 48:
-						_context.prev = 48;
+					case 52:
+						_context.prev = 52;
 
 						if (!_didIteratorError) {
-							_context.next = 51;
+							_context.next = 55;
 							break;
 						}
 
 						throw _iteratorError;
 
-					case 51:
-						return _context.finish(48);
+					case 55:
+						return _context.finish(52);
 
-					case 52:
-						return _context.finish(45);
+					case 56:
+						return _context.finish(49);
 
-					case 53:
-						_context.next = 59;
+					case 57:
+						_context.next = 63;
 						break;
 
-					case 55:
-						_context.prev = 55;
+					case 59:
+						_context.prev = 59;
 						_context.t1 = _context['catch'](1);
-						_context.next = 59;
+						_context.next = 63;
 						return _SystemLog2.default.create({ title: 'update pick mon score Failed', content: _context.t1, status: 'danger' });
 
-					case 59:
+					case 63:
 					case 'end':
 						return _context.stop();
 				}
 			}
-		}, _callee, undefined, [[1, 55], [21, 41, 45, 53], [46,, 48, 52]]);
+		}, _callee, undefined, [[1, 59], [21, 45, 49, 57], [50,, 52, 56]]);
 	}));
 
 	return function pickMon() {

@@ -74,7 +74,7 @@ var jsonOdd = function () {
 						_iteratorError = undefined;
 						_context3.prev = 10;
 						_loop = /*#__PURE__*/regeneratorRuntime.mark(function _loop() {
-							var pickJsonOddID, latestJsonOddScore, status, update;
+							var pickJsonOddID, latestJsonOddScore, status, update, updatedEvent;
 							return regeneratorRuntime.wrap(function _loop$(_context2) {
 								while (1) {
 									switch (_context2.prev = _context2.next) {
@@ -182,9 +182,20 @@ var jsonOdd = function () {
 												updatedAt: (0, _moment2.default)()
 											};
 											_context2.next = 25;
-											return _Event2.default.findOneAndUpdate({ ID: pickJsonOddID, provider: 'jo', status: 'Pending' }, { $set: update });
+											return _Event2.default.findOneAndUpdate({ ID: pickJsonOddID, provider: 'jo', status: 'Pending' }, { $set: update }, { new: true });
 
 										case 25:
+											updatedEvent = _context2.sent;
+
+											if (!(updatedEvent.status === 'Review')) {
+												_context2.next = 29;
+												break;
+											}
+
+											_context2.next = 29;
+											return _SystemLog2.default.create({ title: 'JsonOdd Event has Review', content: '' + updatedEvent._id, status: 'danger' });
+
+										case 29:
 										case 'end':
 											return _context2.stop();
 									}

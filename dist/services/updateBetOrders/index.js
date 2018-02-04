@@ -54,7 +54,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var updateBetOrderResult = function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-		var betOrders, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, betOrder, allPicksPending, update, newBetOrder, player, agent, agentNotify, playerNotify;
+		var betOrders, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, betOrder, allPicksPending, update, updatedBetOrder, player, agent, agentNotify, playerNotify;
 
 		return regeneratorRuntime.wrap(function _callee$(_context) {
 			while (1) {
@@ -85,7 +85,7 @@ var updateBetOrderResult = function () {
 
 					case 12:
 						if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-							_context.next = 46;
+							_context.next = 49;
 							break;
 						}
 
@@ -97,7 +97,7 @@ var updateBetOrderResult = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 43);
+						return _context.abrupt('continue', 46);
 
 					case 17:
 						update = (0, _settleBetOrder2.default)(betOrder);
@@ -107,41 +107,50 @@ var updateBetOrderResult = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 43);
+						return _context.abrupt('continue', 46);
 
 					case 20:
 						_context.next = 22;
 						return _BetOrder2.default.findOneAndUpdate({ _id: betOrder._id }, { $set: _lodash2.default.merge(update, { updatedAt: (0, _moment2.default)() }) }, { new: true }).populate('Agent').populate('Player');
 
 					case 22:
-						newBetOrder = _context.sent;
+						updatedBetOrder = _context.sent;
 
-						if (newBetOrder.isClosed) {
-							_context.next = 25;
+						if (!(updatedBetOrder.status === 'Review')) {
+							_context.next = 26;
 							break;
 						}
 
-						return _context.abrupt('continue', 43);
+						_context.next = 26;
+						return _SystemLog2.default.create({ title: 'BetOrder has Review', content: '' + updatedBetOrder._id, status: 'danger' });
 
-					case 25:
-						_context.next = 27;
-						return _User2.default.findOneAndUpdate({ _id: newBetOrder.Player }, {
+					case 26:
+						if (updatedBetOrder.isClosed) {
+							_context.next = 28;
+							break;
+						}
+
+						return _context.abrupt('continue', 46);
+
+					case 28:
+						_context.next = 30;
+						return _User2.default.findOneAndUpdate({ _id: updatedBetOrder.Player }, {
 							'$inc': {
-								'credit.balance': Number(newBetOrder.resultAmount),
-								'credit.pending': -Number(newBetOrder.bet.atRisk)
+								'credit.balance': Number(updatedBetOrder.resultAmount),
+								'credit.pending': -Number(updatedBetOrder.bet.atRisk)
 							},
 							'$set': {
 								'credit.updatedAt': (0, _moment2.default)()
 							}
 						});
 
-					case 27:
+					case 30:
 						player = _context.sent;
-						_context.next = 30;
-						return _User4.default.findOneAndUpdate({ _id: newBetOrder.Agent }, {
+						_context.next = 33;
+						return _User4.default.findOneAndUpdate({ _id: updatedBetOrder.Agent }, {
 							'$inc': {
-								'credit.balance': newBetOrder.status === 'Lost' ? Number(newBetOrder.resultAmount) : 0,
-								'credit.pending': -Number(newBetOrder.bet.atRisk)
+								'credit.balance': updatedBetOrder.status === 'Lost' ? Number(updatedBetOrder.resultAmount) : 0,
+								'credit.pending': -Number(updatedBetOrder.bet.atRisk)
 							},
 							'$set': {
 								'credit.updatedAt': (0, _moment2.default)()
@@ -150,113 +159,113 @@ var updateBetOrderResult = function () {
 							new: true
 						});
 
-					case 30:
+					case 33:
 						agent = _context.sent;
 
-						if (!(newBetOrder.status === 'Lost')) {
-							_context.next = 34;
+						if (!(updatedBetOrder.status === 'Lost')) {
+							_context.next = 37;
 							break;
 						}
 
-						_context.next = 34;
+						_context.next = 37;
 						return _Transaction2.default.create({
 							Agent: agent._id,
-							ID: newBetOrder.ID,
+							ID: updatedBetOrder.ID,
 							type: 'BetOrder',
-							description: '(' + player.username + ') Lost ' + newBetOrder.title,
-							amount: Number(newBetOrder.resultAmount),
+							description: '(' + player.username + ') Lost ' + updatedBetOrder.title,
+							amount: Number(updatedBetOrder.resultAmount),
 							balance: agent.credit.balance
 						});
 
-					case 34:
-						if (!newBetOrder.Agent.notification.afterBetOrder) {
-							_context.next = 38;
+					case 37:
+						if (!updatedBetOrder.Agent.notification.afterBetOrder) {
+							_context.next = 41;
 							break;
 						}
 
 						agentNotify = new _apn4.default.Notification({
 							sound: 'ping.aiff',
-							alert: newBetOrder.Player.username + '\'s ' + newBetOrder.title + ' had ' + newBetOrder.status + ' ' + (newBetOrder.resultAmount === 0 ? '' : newBetOrder.resultAmount),
+							alert: updatedBetOrder.Player.username + '\'s ' + updatedBetOrder.title + ' had ' + updatedBetOrder.status + ' ' + (updatedBetOrder.resultAmount === 0 ? '' : updatedBetOrder.resultAmount),
 							topic: _config2.default.APN_TOPIC,
-							payload: { BetOrder: newBetOrder.BetOrder }
+							payload: { BetOrder: updatedBetOrder.BetOrder }
 						});
-						_context.next = 38;
-						return _apn2.default.send(agentNotify, newBetOrder.Agent.notification.deviceToken);
+						_context.next = 41;
+						return _apn2.default.send(agentNotify, updatedBetOrder.Agent.notification.deviceToken);
 
-					case 38:
-						if (!newBetOrder.Player.notification.afterBetOrder) {
-							_context.next = 42;
+					case 41:
+						if (!updatedBetOrder.Player.notification.afterBetOrder) {
+							_context.next = 45;
 							break;
 						}
 
 						playerNotify = new _apn4.default.Notification({
 							sound: 'ping.aiff',
-							alert: 'Your ' + newBetOrder.title + ' had ' + newBetOrder.status + ' ' + (newBetOrder.resultAmount === 0 ? '' : newBetOrder.resultAmount),
+							alert: 'Your ' + updatedBetOrder.title + ' had ' + updatedBetOrder.status + ' ' + (updatedBetOrder.resultAmount === 0 ? '' : updatedBetOrder.resultAmount),
 							topic: _config2.default.APN_TOPIC,
-							payload: { BetOrder: newBetOrder.BetOrder }
+							payload: { BetOrder: updatedBetOrder.BetOrder }
 						});
-						_context.next = 42;
-						return _apn2.default.send(playerNotify, newBetOrder.Player.notification.deviceToken);
+						_context.next = 45;
+						return _apn2.default.send(playerNotify, updatedBetOrder.Player.notification.deviceToken);
 
-					case 42:
+					case 45:
 
 						_apn2.default.shutdown();
 
-					case 43:
+					case 46:
 						_iteratorNormalCompletion = true;
 						_context.next = 12;
 						break;
 
-					case 46:
-						_context.next = 52;
+					case 49:
+						_context.next = 55;
 						break;
 
-					case 48:
-						_context.prev = 48;
+					case 51:
+						_context.prev = 51;
 						_context.t0 = _context['catch'](10);
 						_didIteratorError = true;
 						_iteratorError = _context.t0;
 
-					case 52:
-						_context.prev = 52;
-						_context.prev = 53;
+					case 55:
+						_context.prev = 55;
+						_context.prev = 56;
 
 						if (!_iteratorNormalCompletion && _iterator.return) {
 							_iterator.return();
 						}
 
-					case 55:
-						_context.prev = 55;
+					case 58:
+						_context.prev = 58;
 
 						if (!_didIteratorError) {
-							_context.next = 58;
+							_context.next = 61;
 							break;
 						}
 
 						throw _iteratorError;
 
-					case 58:
-						return _context.finish(55);
-
-					case 59:
-						return _context.finish(52);
-
-					case 60:
-						_context.next = 66;
-						break;
+					case 61:
+						return _context.finish(58);
 
 					case 62:
-						_context.prev = 62;
+						return _context.finish(55);
+
+					case 63:
+						_context.next = 69;
+						break;
+
+					case 65:
+						_context.prev = 65;
 						_context.t1 = _context['catch'](1);
-						_context.next = 66;
+						_context.next = 69;
 						return _SystemLog2.default.create({ title: 'update bet order result failed', content: '' + _context.t1, status: 'danger' });
 
-					case 66:
+					case 69:
 					case 'end':
 						return _context.stop();
 				}
 			}
-		}, _callee, undefined, [[1, 62], [10, 48, 52, 60], [53,, 55, 59]]);
+		}, _callee, undefined, [[1, 65], [10, 51, 55, 63], [56,, 58, 62]]);
 	}));
 
 	return function updateBetOrderResult() {
