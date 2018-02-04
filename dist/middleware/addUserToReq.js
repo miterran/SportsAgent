@@ -41,7 +41,10 @@ var addUserToReq = function () {
 					case 0:
 						token = req.headers['authorization'];
 
-						if (!token) next();
+						if (!token) {
+							req.user = { _id: '', username: 'vistor', role: 'Guest', createdAt: (0, _moment2.default)() };
+							next();
+						}
 						_context.prev = 2;
 						decodeToken = _jsonwebtoken2.default.verify(token, _config2.default.jwtSecret);
 						_context.next = 6;

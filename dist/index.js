@@ -258,28 +258,9 @@ ws.listen(process.env.PORT, function () {
 			if (!userCounter.includes(webSocket.upgradeReq.headers['sec-websocket-key'])) {
 				userCounter.push(webSocket.upgradeReq.headers['sec-websocket-key']);
 			}
-			// eslint-disable-next-line
-			console.log(userCounter.length);
-			if (userCounter.length === 1) {
-				_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-					return regeneratorRuntime.wrap(function _callee4$(_context4) {
-						while (1) {
-							switch (_context4.prev = _context4.next) {
-								case 0:
-									_context4.next = 2;
-									return (0, _updateEvents2.default)();
-
-								case 2:
-									return _context4.abrupt('return', _context4.sent);
-
-								case 3:
-								case 'end':
-									return _context4.stop();
-							}
-						}
-					}, _callee4, undefined);
-				}))();
-			}
+			// // eslint-disable-next-line
+			// console.log(userCounter.length);
+			// if(userCounter.length === 1){ (async() => await updateEvents())();}
 		},
 		onDisconnect: function onDisconnect(webSocket) {
 			userCounter = userCounter.filter(function (user) {

@@ -83,7 +83,7 @@ var updateEventOddFromJsonOdd = function () {
 					case 8:
 						jsonOddSports = _context.sent;
 						_context.next = 11;
-						return axiosJsonOdd.get('https://jsonodds.com/api/odds?source=0').then(function (res) {
+						return axiosJsonOdd.get('https://jsonodds.com/api/odds?source=4').then(function (res) {
 							return res.data;
 						}).catch(function () {
 							return [];

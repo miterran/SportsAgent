@@ -18,6 +18,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Query = exports.Query = {
 	event: function event(root, req) {
 		return _Event2.default.findOne({ $or: [{ _id: _mongoose2.default.Types.ObjectId(req._id) }, { ID: req.ID }] });
+	},
+	reviewEvents: function reviewEvents(root, req) {
+		return _Event2.default.find({ isFinished: false, isPicked: true });
 	}
 };
 //# sourceMappingURL=index.js.map
