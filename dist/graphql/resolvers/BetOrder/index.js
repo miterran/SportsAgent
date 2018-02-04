@@ -28,6 +28,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var Query = exports.Query = {
+	reviewBetOrders: function reviewBetOrders(root, req, ctx) {
+		return _BetOrder2.default.find({ status: 'review' }).populate({ path: 'Picks', populate: { path: 'Event' } }).populate('Agent').populate('Player');
+	},
 	betOrder: function betOrder(root, req) {
 		var _this = this;
 

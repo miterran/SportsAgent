@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/graphql/resolvers/Pick/typeDefs.js"],"names":["Query"],"mappings":";;;;;AAAO,IAAMA,+FAAN","file":"typeDefs.js","sourcesContent":["export const Query = `\n\tpick: PickType\n\tpicks (\n\t\tstatus: String!\n\t): [PickType]\n`;"]}

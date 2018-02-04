@@ -126,13 +126,15 @@ app.use((0, _compression2.default)());
 app.use((0, _methodOverride2.default)());
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
+
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/baseball')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/basketball')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/football')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/ncaa')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/hockey')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/sport')));
-//app.use(express.static(path.resolve(__dirname, '../client/build')))
+
+app.use(_express2.default.static(_path2.default.resolve(__dirname, '../client/build')));
 
 app.get('/hi', function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
@@ -227,9 +229,6 @@ _nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE_
 	}, _callee3, undefined);
 })));
 
-//app.get('/app', (req, res) => res.sendFile(path.resolve(__dirname, '../client/build', 'index.html')))
-
-
 app.use(_addUserToReq2.default);
 
 app.use('/graphql', (0, _apolloServerExpress.graphqlExpress)(function (req) {
@@ -243,6 +242,10 @@ app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	endpointURL: '/graphql',
 	subscriptionsEndpoint: _config2.default.WSURL
 }));
+
+app.get('*', function (req, res) {
+	return res.sendFile(_path2.default.resolve(__dirname, '../client/build', 'index.html'));
+});
 
 var ws = (0, _http.createServer)(app);
 
