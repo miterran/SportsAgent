@@ -134,8 +134,6 @@ app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirn
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/hockey')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/sport')));
 
-app.use(_express2.default.static(_path2.default.resolve(__dirname, '../client/build')));
-
 app.get('/hi', function () {
 	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
 		return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -243,9 +241,9 @@ app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	subscriptionsEndpoint: _config2.default.WSURL
 }));
 
-app.get('*', function (req, res) {
-	return res.sendFile(_path2.default.resolve(__dirname, '../client/build', 'index.html'));
-});
+//app.use('/web', express.static(path.resolve(__dirname, '../client/build')))
+
+//app.get('/app', (req, res) => res.sendFile(path.resolve(__dirname, '../client/build', 'index.html')))
 
 var ws = (0, _http.createServer)(app);
 
