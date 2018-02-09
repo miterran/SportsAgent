@@ -172,7 +172,7 @@ var updateBetOrderResult = function () {
 							Agent: agent._id,
 							ID: updatedBetOrder.ID,
 							type: 'BetOrder',
-							description: '(' + player.username + ') Lost ' + updatedBetOrder.title,
+							description: '(' + player.username + ') Lost a ' + updatedBetOrder.title,
 							amount: Number(updatedBetOrder.resultAmount),
 							balance: agent.credit.balance
 						});

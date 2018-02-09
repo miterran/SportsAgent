@@ -133,98 +133,78 @@ app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirn
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/ncaa')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/hockey')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/sport')));
-
-app.get('/hi', function () {
-	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
-		return regeneratorRuntime.wrap(function _callee$(_context) {
-			while (1) {
-				switch (_context.prev = _context.next) {
-					case 0:
-
-						// const agentNotify = new apn.Notification({
-						// 	sound: 'ping.aiff',
-						// 	alert: `收吾收到啊`,
-						// 	topic: config.APN_TOPIC,
-						// 	payload: { BetOrder: 'test' }
-						// })
-
-						// await apnProvider.send(agentNotify, '671c147576304b7ccb4b9b327149273ce701256af01f553555e7c13d5ff7b639').then(res => console.log(res))
-						// apnProvider.shutdown();
-
-						res.json('done');
-
-					case 1:
-					case 'end':
-						return _context.stop();
-				}
-			}
-		}, _callee, undefined);
-	}));
-
-	return function (_x, _x2) {
-		return _ref.apply(this, arguments);
-	};
-}());
+//app.use(express.static(path.resolve(__dirname, '../client/build')))
+// app.get('/hi', async (req, res) => {
+// 	// const agentNotify = new apn.Notification({
+// 	// 	sound: 'ping.aiff',
+// 	// 	alert: 'message',
+// 	// 	topic: config.APN_TOPIC,
+// 	// 	payload: { BetOrder: 'test' }
+// 	// })
+// 	// await apnProvider.send(agentNotify, '671c147576304b7ccb4b9b327149273ce701256af01f553555e7c13d5ff7b639').then(res => console.log(res))
+// 	// apnProvider.shutdown();
+// 	res.json('done')
+// })
 
 var userCounter = [];
 
-_nodeSchedule2.default.scheduleJob('*/' + _config2.default.UPDATE_ODD_MIN + ' * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+_nodeSchedule2.default.scheduleJob('*/' + _config2.default.UPDATE_ODD_MIN + ' * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+	return regeneratorRuntime.wrap(function _callee$(_context) {
+		while (1) {
+			switch (_context.prev = _context.next) {
+				case 0:
+					// eslint-disable-next-line
+					console.log('scheduleJob usercounter', (0, _moment2.default)(), 'online users ' + userCounter.length);
+
+					if (!(userCounter.length > 0)) {
+						_context.next = 4;
+						break;
+					}
+
+					_context.next = 4;
+					return (0, _updateEvents2.default)();
+
+				case 4:
+				case 'end':
+					return _context.stop();
+			}
+		}
+	}, _callee, undefined);
+})));
+_nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
 	return regeneratorRuntime.wrap(function _callee2$(_context2) {
 		while (1) {
 			switch (_context2.prev = _context2.next) {
 				case 0:
-					// eslint-disable-next-line
-					console.log('scheduleJob usercounter', (0, _moment2.default)(), userCounter.length);
+					_context2.next = 2;
+					return (0, _jsonOdd2.default)();
 
-					if (!(userCounter.length > 0)) {
-						_context2.next = 4;
-						break;
-					}
-
+				case 2:
 					_context2.next = 4;
-					return (0, _updateEvents2.default)();
+					return (0, _pickMon2.default)();
 
 				case 4:
+					_context2.next = 6;
+					return (0, _updatePicks2.default)();
+
+				case 6:
+					_context2.next = 8;
+					return (0, _updateBetOrders2.default)();
+
+				case 8:
+					_context2.next = 10;
+					return _Event2.default.deleteExpiredUnpickEvents();
+
+				case 10:
+					_context2.next = 12;
+					return _User2.default.resetWeeklyBalanceToZero();
+
+				case 12:
 				case 'end':
 					return _context2.stop();
 			}
 		}
 	}, _callee2, undefined);
-})));
-_nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-	return regeneratorRuntime.wrap(function _callee3$(_context3) {
-		while (1) {
-			switch (_context3.prev = _context3.next) {
-				case 0:
-					_context3.next = 2;
-					return (0, _jsonOdd2.default)();
-
-				case 2:
-					_context3.next = 4;
-					return (0, _pickMon2.default)();
-
-				case 4:
-					_context3.next = 6;
-					return (0, _updatePicks2.default)();
-
-				case 6:
-					_context3.next = 8;
-					return (0, _updateBetOrders2.default)();
-
-				case 8:
-					_context3.next = 10;
-					return _Event2.default.deleteExpiredUnpickEvents();
-
-				case 10:
-					_context3.next = 12;
-					return _User2.default.resetWeeklyBalanceToZero();
-
-				case 12:
-				case 'end':
-					return _context3.stop();
-			}
-		}
-	}, _callee3, undefined);
 })));
 
 app.use(_addUserToReq2.default);
@@ -241,9 +221,7 @@ app.use('/graphiql', (0, _apolloServerExpress.graphiqlExpress)({
 	subscriptionsEndpoint: _config2.default.WSURL
 }));
 
-//app.use('/web', express.static(path.resolve(__dirname, '../client/build')))
-
-//app.get('/app', (req, res) => res.sendFile(path.resolve(__dirname, '../client/build', 'index.html')))
+//app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '../client/build', 'index.html')))
 
 var ws = (0, _http.createServer)(app);
 
@@ -255,38 +233,43 @@ ws.listen(process.env.PORT, function () {
 		execute: _graphql.execute,
 		subscribe: _graphql.subscribe,
 		schema: _schema2.default,
-		onConnect: function onConnect(connectionParams, webSocket) {
-			if (!userCounter.includes(webSocket.upgradeReq.headers['sec-websocket-key'])) {
-				userCounter.push(webSocket.upgradeReq.headers['sec-websocket-key']);
-			}
-			// // eslint-disable-next-line
-			console.log(userCounter.length);
-			if (userCounter.length === 1) {
-				_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-					return regeneratorRuntime.wrap(function _callee4$(_context4) {
-						while (1) {
-							switch (_context4.prev = _context4.next) {
-								case 0:
-									_context4.next = 2;
-									return (0, _updateEvents2.default)();
+		onConnect: function () {
+			var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(connectionParams, webSocket) {
+				return regeneratorRuntime.wrap(function _callee3$(_context3) {
+					while (1) {
+						switch (_context3.prev = _context3.next) {
+							case 0:
+								if (!userCounter.includes(webSocket.upgradeReq.headers['sec-websocket-key'])) {
+									userCounter.push(webSocket.upgradeReq.headers['sec-websocket-key']);
+								}
+								// eslint-disable-next-line
+								console.log(userCounter.length);
 
-								case 2:
-									return _context4.abrupt('return', _context4.sent);
+								if (!(userCounter.length === 1)) {
+									_context3.next = 5;
+									break;
+								}
 
-								case 3:
-								case 'end':
-									return _context4.stop();
-							}
+								_context3.next = 5;
+								return (0, _updateEvents2.default)();
+
+							case 5:
+							case 'end':
+								return _context3.stop();
 						}
-					}, _callee4, undefined);
-				}))();
-			}
-		},
+					}
+				}, _callee3, undefined);
+			}));
+
+			return function onConnect(_x, _x2) {
+				return _ref3.apply(this, arguments);
+			};
+		}(),
 		onDisconnect: function onDisconnect(webSocket) {
 			userCounter = userCounter.filter(function (user) {
 				return user !== webSocket.upgradeReq.headers['sec-websocket-key'];
 			});
-			// eslint-disable-next-line
+			//			eslint-disable-next-line
 			console.log(userCounter.length);
 		}
 	}, {

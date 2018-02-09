@@ -45,9 +45,15 @@ var _Receipt = require('../../../models/Receipt');
 
 var _Receipt2 = _interopRequireDefault(_Receipt);
 
+var _inAppPurchase = require('in-app-purchase');
+
+var _inAppPurchase2 = _interopRequireDefault(_inAppPurchase);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+_inAppPurchase2.default.config({ applePassword: "1ec1ae5860f1428593cd3dab597757aa" });
 
 var Query = exports.Query = {
 	transactions: function transactions(root, _ref, ctx) {
@@ -189,34 +195,67 @@ var Mutation = exports.Mutation = {
 		var _this3 = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-			var product, agent, theID;
+			var response, purchaseData, purchaseHistoryData, product, agent;
 			return regeneratorRuntime.wrap(function _callee3$(_context3) {
 				while (1) {
 					switch (_context3.prev = _context3.next) {
 						case 0:
+							_context3.prev = 0;
+
 							if (!(ctx.user.role !== 'Agent')) {
-								_context3.next = 2;
+								_context3.next = 3;
 								break;
 							}
 
 							return _context3.abrupt('return', { title: 'Not Authenticated', content: 'Please try again.', status: 'danger' });
 
-						case 2:
-							_context3.prev = 2;
+						case 3:
 							_context3.next = 5;
-							return _PriceRate2.default.findOne({ item: req.item });
+							return _inAppPurchase2.default.setup();
 
 						case 5:
+							_context3.next = 7;
+							return _inAppPurchase2.default.validate(_inAppPurchase2.default.APPLE, req.receipt);
+
+						case 7:
+							response = _context3.sent;
+
+							if (_inAppPurchase2.default.isValidated(response)) {
+								_context3.next = 10;
+								break;
+							}
+
+							return _context3.abrupt('return', { title: 'Error', content: 'Please try again later.', status: 'danger' });
+
+						case 10:
+							purchaseData = _inAppPurchase2.default.getPurchaseData(response)[0];
+							_context3.next = 13;
+							return _Receipt2.default.findOne({ ID: purchaseData.transactionId });
+
+						case 13:
+							purchaseHistoryData = _context3.sent;
+
+							if (!purchaseHistoryData) {
+								_context3.next = 16;
+								break;
+							}
+
+							return _context3.abrupt('return', { title: 'Duplicated', content: 'Please try again later.', status: 'warning' });
+
+						case 16:
+							_context3.next = 18;
+							return _PriceRate2.default.findOne({ item: purchaseData.productId });
+
+						case 18:
 							product = _context3.sent;
-							_context3.next = 8;
+							_context3.next = 21;
 							return _User2.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(ctx.user._id) }, { $inc: { 'credit.balance': product.credit } }, { new: true });
 
-						case 8:
+						case 21:
 							agent = _context3.sent;
-							theID = _uniqid2.default.process();
-							_context3.next = 12;
+							_context3.next = 24;
 							return _Receipt2.default.create({
-								ID: theID,
+								ID: purchaseData.transactionId,
 								Agent: ctx.user._id,
 								platform: req.platform,
 								data: req.receipt,
@@ -226,40 +265,40 @@ var Mutation = exports.Mutation = {
 								createdAt: (0, _moment2.default)()
 							});
 
-						case 12:
-							_context3.next = 14;
+						case 24:
+							_context3.next = 26;
 							return _Transaction2.default.create({
-								ID: theID,
+								ID: purchaseData.transactionId,
 								Agent: ctx.user._id,
-								type: 'Purchase',
+								type: 'Iap',
 								description: 'Purchased ' + product.credit + ' credit ($' + product.usd + ')',
 								createdAt: (0, _moment2.default)(),
 								amount: product.credit,
 								balance: agent.credit.balance
 							});
 
-						case 14:
-							_context3.next = 16;
-							return _SystemLog2.default.create({ title: 'Credit Purchase Success', content: ctx.user.username + ' purchased credit ' + req.item + ' ' + req.platform + ' ' + req.receipt, status: 'success' });
+						case 26:
+							_context3.next = 28;
+							return _SystemLog2.default.create({ title: 'Credit Purchase Success', content: ctx.user.username + ' purchased credit ' + req.item + ' ' + req.platform + ' ' + purchaseData.transactionId, status: 'success' });
 
-						case 16:
-							return _context3.abrupt('return', { title: 'Completed', content: agent.credit.balance, status: 'success' });
+						case 28:
+							return _context3.abrupt('return', { title: 'success', content: agent.credit.balance, status: 'success' });
 
-						case 19:
-							_context3.prev = 19;
-							_context3.t0 = _context3['catch'](2);
-							_context3.next = 23;
-							return _SystemLog2.default.create({ title: 'Credit Purchase Failed', content: ctx.user.username + ' purchase credit Failed ' + req.item + ' ' + req.platform + ' ' + req.receipt + ' ' + _context3.t0, status: 'danger' });
+						case 31:
+							_context3.prev = 31;
+							_context3.t0 = _context3['catch'](0);
+							_context3.next = 35;
+							return _SystemLog2.default.create({ title: 'Credit Purchase Failed', content: ctx.user.username + ' purchased credit ' + req.item + ' ' + req.platform + ' ' + req.receipt, status: 'danger' });
 
-						case 23:
-							return _context3.abrupt('return', { title: 'Failed', content: 'Please try again.', status: 'danger' });
+						case 35:
+							return _context3.abrupt('return', { title: 'Error', content: 'Please try again later.', status: 'danger' });
 
-						case 24:
+						case 36:
 						case 'end':
 							return _context3.stop();
 					}
 				}
-			}, _callee3, _this3, [[2, 19]]);
+			}, _callee3, _this3, [[0, 31]]);
 		}))();
 	}
 };

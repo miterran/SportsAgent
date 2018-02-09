@@ -30,7 +30,7 @@ var Query = exports.Query = {
 		return _Event2.default.findOne({ $or: [{ _id: _mongoose2.default.Types.ObjectId(req._id) }, { ID: req.ID }] });
 	},
 	reviewEvents: function reviewEvents(root, req) {
-		return _Event2.default.find({ $or: [{ status: 'Review', isPicked: true }, { isPicked: true, isFinished: false, matchTime: { $lte: (0, _moment2.default)().add(3, 'h') } }] });
+		return _Event2.default.find({ $or: [{ status: 'Review', isPicked: true }, { isPicked: true, isFinished: false, matchTime: { $lte: (0, _moment2.default)().subtract(3, 'h') } }] });
 	}
 };
 

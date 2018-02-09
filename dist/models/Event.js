@@ -95,7 +95,6 @@ var EventSchema = new Schema({
 	status: { type: String, enum: ['Pending', 'Finished', 'Cancelled', 'Postponed', 'Review'], default: 'Pending', required: true },
 	updatedAt: { type: Date, default: Date.now, required: true }
 });
-//	await Event.find({ isPicked: { $exists: false }, cutOffAt: { $lt: moment() } })
 
 var EventClass = function () {
 	function EventClass() {

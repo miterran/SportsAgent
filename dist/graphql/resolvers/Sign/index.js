@@ -490,20 +490,20 @@ var Mutation = exports.Mutation = {
 								break;
 							}
 
-							return _context4.abrupt('return', { title: 'Please try again.', content: 'Email or Passcode is incorrect', status: 'danger' });
+							return _context4.abrupt('return', { title: 'ERROR.', content: 'Email or Passcode incorrect', status: 'danger' });
 
 						case 15:
 							mailOptions = {
 								from: _config2.default.GMAIL, // sender address
 								to: agent.email, // list of receivers
 								subject: 'SPORTS AGENT APP PASSWORD RESET', // Subject line
-								text: 'Sports Agent App \n username: ' + agent.username + ' \n temporary password: ' + tempPassword + ' \n Please reset after login.' // plain text body
+								text: 'Sports Agent App \n username: ' + agent.username + ' \n temporary password: ' + tempPassword + ' \n Please set up a new password after login.' // plain text body
 							};
 							_context4.next = 18;
 							return transporter.sendMail(mailOptions);
 
 						case 18:
-							return _context4.abrupt('return', { title: 'SUCCESS', content: 'temporary password has been sent to ' + agent.email, status: 'success' });
+							return _context4.abrupt('return', { title: 'SUCCESS', content: agent.email, status: 'success' });
 
 						case 21:
 							_context4.prev = 21;
