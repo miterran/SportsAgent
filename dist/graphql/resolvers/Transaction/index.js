@@ -53,7 +53,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-_inAppPurchase2.default.config({ applePassword: "1ec1ae5860f1428593cd3dab597757aa" });
+_inAppPurchase2.default.config({ applePassword: _config2.default.APPLE_PASSWORD });
 
 var Query = exports.Query = {
 	transactions: function transactions(root, _ref, ctx) {
