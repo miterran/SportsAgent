@@ -121,7 +121,7 @@ var updateEventOddFromJsonOdd = function () {
 
 					case 17:
 						allSports = _context.sent;
-						jsonEvents = nba.concat(allSports).concat(nbaFull);
+						jsonEvents = allSports.concat(nba).concat(nbaFull);
 
 						if (!_lodash2.default.isEmpty(jsonEvents)) {
 							_context.next = 21;
