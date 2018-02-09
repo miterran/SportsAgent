@@ -134,77 +134,95 @@ app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirn
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/hockey')));
 app.use('/images/teamlogos', _express2.default.static(_path2.default.join(__dirname, '/public/images/teamlogos/sport')));
 //app.use(express.static(path.resolve(__dirname, '../client/build')))
-// app.get('/hi', async (req, res) => {
-// 	// const agentNotify = new apn.Notification({
-// 	// 	sound: 'ping.aiff',
-// 	// 	alert: 'message',
-// 	// 	topic: config.APN_TOPIC,
-// 	// 	payload: { BetOrder: 'test' }
-// 	// })
-// 	// await apnProvider.send(agentNotify, '671c147576304b7ccb4b9b327149273ce701256af01f553555e7c13d5ff7b639').then(res => console.log(res))
-// 	// apnProvider.shutdown();
-// 	res.json('done')
-// })
+app.get('/hi', function () {
+	var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, res) {
+		return regeneratorRuntime.wrap(function _callee$(_context) {
+			while (1) {
+				switch (_context.prev = _context.next) {
+					case 0:
+						// const agentNotify = new apn.Notification({
+						// 	sound: 'ping.aiff',
+						// 	alert: 'message',
+						// 	topic: config.APN_TOPIC,
+						// 	payload: { BetOrder: 'test' }
+						// })
+						// await apnProvider.send(agentNotify, '671c147576304b7ccb4b9b327149273ce701256af01f553555e7c13d5ff7b639').then(res => console.log(res))
+						// apnProvider.shutdown();
+						//	await updateEvents()
+						res.json('done');
+
+					case 1:
+					case 'end':
+						return _context.stop();
+				}
+			}
+		}, _callee, undefined);
+	}));
+
+	return function (_x, _x2) {
+		return _ref.apply(this, arguments);
+	};
+}());
 
 var userCounter = [];
 
-_nodeSchedule2.default.scheduleJob('*/' + _config2.default.UPDATE_ODD_MIN + ' * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-	return regeneratorRuntime.wrap(function _callee$(_context) {
+_nodeSchedule2.default.scheduleJob('*/' + _config2.default.UPDATE_ODD_MIN + ' * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+	return regeneratorRuntime.wrap(function _callee2$(_context2) {
 		while (1) {
-			switch (_context.prev = _context.next) {
+			switch (_context2.prev = _context2.next) {
 				case 0:
 					// eslint-disable-next-line
 					console.log('scheduleJob usercounter', (0, _moment2.default)(), 'online users ' + userCounter.length);
 
 					if (!(userCounter.length > 0)) {
-						_context.next = 4;
+						_context2.next = 4;
 						break;
 					}
 
-					_context.next = 4;
+					_context2.next = 4;
 					return (0, _updateEvents2.default)();
 
 				case 4:
-				case 'end':
-					return _context.stop();
-			}
-		}
-	}, _callee, undefined);
-})));
-_nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-	return regeneratorRuntime.wrap(function _callee2$(_context2) {
-		while (1) {
-			switch (_context2.prev = _context2.next) {
-				case 0:
-					_context2.next = 2;
-					return (0, _jsonOdd2.default)();
-
-				case 2:
-					_context2.next = 4;
-					return (0, _pickMon2.default)();
-
-				case 4:
-					_context2.next = 6;
-					return (0, _updatePicks2.default)();
-
-				case 6:
-					_context2.next = 8;
-					return (0, _updateBetOrders2.default)();
-
-				case 8:
-					_context2.next = 10;
-					return _Event2.default.deleteExpiredUnpickEvents();
-
-				case 10:
-					_context2.next = 12;
-					return _User2.default.resetWeeklyBalanceToZero();
-
-				case 12:
 				case 'end':
 					return _context2.stop();
 			}
 		}
 	}, _callee2, undefined);
+})));
+_nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+	return regeneratorRuntime.wrap(function _callee3$(_context3) {
+		while (1) {
+			switch (_context3.prev = _context3.next) {
+				case 0:
+					_context3.next = 2;
+					return (0, _jsonOdd2.default)();
+
+				case 2:
+					_context3.next = 4;
+					return (0, _pickMon2.default)();
+
+				case 4:
+					_context3.next = 6;
+					return (0, _updatePicks2.default)();
+
+				case 6:
+					_context3.next = 8;
+					return (0, _updateBetOrders2.default)();
+
+				case 8:
+					_context3.next = 10;
+					return _Event2.default.deleteExpiredUnpickEvents();
+
+				case 10:
+					_context3.next = 12;
+					return _User2.default.resetWeeklyBalanceToZero();
+
+				case 12:
+				case 'end':
+					return _context3.stop();
+			}
+		}
+	}, _callee3, undefined);
 })));
 
 app.use(_addUserToReq2.default);
@@ -234,10 +252,10 @@ ws.listen(process.env.PORT, function () {
 		subscribe: _graphql.subscribe,
 		schema: _schema2.default,
 		onConnect: function () {
-			var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(connectionParams, webSocket) {
-				return regeneratorRuntime.wrap(function _callee3$(_context3) {
+			var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(connectionParams, webSocket) {
+				return regeneratorRuntime.wrap(function _callee4$(_context4) {
 					while (1) {
-						switch (_context3.prev = _context3.next) {
+						switch (_context4.prev = _context4.next) {
 							case 0:
 								if (!userCounter.includes(webSocket.upgradeReq.headers['sec-websocket-key'])) {
 									userCounter.push(webSocket.upgradeReq.headers['sec-websocket-key']);
@@ -246,23 +264,23 @@ ws.listen(process.env.PORT, function () {
 								console.log(userCounter.length);
 
 								if (!(userCounter.length === 1)) {
-									_context3.next = 5;
+									_context4.next = 5;
 									break;
 								}
 
-								_context3.next = 5;
+								_context4.next = 5;
 								return (0, _updateEvents2.default)();
 
 							case 5:
 							case 'end':
-								return _context3.stop();
+								return _context4.stop();
 						}
 					}
-				}, _callee3, undefined);
+				}, _callee4, undefined);
 			}));
 
-			return function onConnect(_x, _x2) {
-				return _ref3.apply(this, arguments);
+			return function onConnect(_x3, _x4) {
+				return _ref4.apply(this, arguments);
 			};
 		}(),
 		onDisconnect: function onDisconnect(webSocket) {
