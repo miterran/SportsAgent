@@ -233,7 +233,7 @@ var Mutation = exports.Mutation = {
 		var _this3 = this;
 
 		return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-			var response, purchaseDataList, newPurchase, agentCreditBalance, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, purchase, Duplicated, product, agent;
+			var response, purchaseDataList, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, purchase, Duplicated, product, agent;
 
 			return regeneratorRuntime.wrap(function _callee3$(_context3) {
 				while (1) {
@@ -268,49 +268,44 @@ var Mutation = exports.Mutation = {
 
 						case 10:
 							purchaseDataList = _inAppPurchase2.default.getPurchaseData(response);
-
-							console.log(purchaseDataList);
-
-							newPurchase = false;
-							agentCreditBalance = 0;
 							_iteratorNormalCompletion = true;
 							_didIteratorError = false;
 							_iteratorError = undefined;
-							_context3.prev = 17;
+							_context3.prev = 14;
 							_iterator = purchaseDataList[Symbol.iterator]();
 
-						case 19:
+						case 16:
 							if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-								_context3.next = 44;
+								_context3.next = 39;
 								break;
 							}
 
 							purchase = _step.value;
-							_context3.next = 23;
+							_context3.next = 20;
 							return _Receipt2.default.findOne({ ID: purchase.transactionId });
 
-						case 23:
+						case 20:
 							Duplicated = _context3.sent;
 
 							if (!Duplicated) {
-								_context3.next = 26;
+								_context3.next = 23;
 								break;
 							}
 
-							return _context3.abrupt('continue', 41);
+							return _context3.abrupt('continue', 36);
 
-						case 26:
-							_context3.next = 28;
+						case 23:
+							_context3.next = 25;
 							return _PriceRate2.default.findOne({ item: purchase.productId });
 
-						case 28:
+						case 25:
 							product = _context3.sent;
-							_context3.next = 31;
+							_context3.next = 28;
 							return _User2.default.findOneAndUpdate({ _id: _mongoose2.default.Types.ObjectId(ctx.user._id) }, { $inc: { 'credit.balance': product.credit } }, { new: true });
 
-						case 31:
+						case 28:
 							agent = _context3.sent;
-							_context3.next = 34;
+							_context3.next = 31;
 							return _Receipt2.default.create({
 								ID: purchase.transactionId,
 								Agent: ctx.user._id,
@@ -322,8 +317,8 @@ var Mutation = exports.Mutation = {
 								createdAt: (0, _moment2.default)()
 							});
 
-						case 34:
-							_context3.next = 36;
+						case 31:
+							_context3.next = 33;
 							return _Transaction2.default.create({
 								ID: purchase.transactionId,
 								Agent: ctx.user._id,
@@ -334,80 +329,70 @@ var Mutation = exports.Mutation = {
 								balance: agent.credit.balance
 							});
 
-						case 36:
-							_context3.next = 38;
+						case 33:
+							_context3.next = 35;
 							return _SystemLog2.default.create({ title: 'Credit Purchase Success', content: ctx.user.username + ' purchased credit ' + req.item + ' ' + req.platform + ' ' + purchase.transactionId, status: 'success' });
 
-						case 38:
-							newPurchase = true;
-							agentCreditBalance = agent.credit.balance;
-							return _context3.abrupt('return');
+						case 35:
+							return _context3.abrupt('return', { title: 'success', content: agent.credit.balance, status: 'success' });
+
+						case 36:
+							_iteratorNormalCompletion = true;
+							_context3.next = 16;
+							break;
+
+						case 39:
+							_context3.next = 45;
+							break;
 
 						case 41:
-							_iteratorNormalCompletion = true;
-							_context3.next = 19;
-							break;
-
-						case 44:
-							_context3.next = 50;
-							break;
-
-						case 46:
-							_context3.prev = 46;
-							_context3.t0 = _context3['catch'](17);
+							_context3.prev = 41;
+							_context3.t0 = _context3['catch'](14);
 							_didIteratorError = true;
 							_iteratorError = _context3.t0;
 
-						case 50:
-							_context3.prev = 50;
-							_context3.prev = 51;
+						case 45:
+							_context3.prev = 45;
+							_context3.prev = 46;
 
 							if (!_iteratorNormalCompletion && _iterator.return) {
 								_iterator.return();
 							}
 
-						case 53:
-							_context3.prev = 53;
+						case 48:
+							_context3.prev = 48;
 
 							if (!_didIteratorError) {
-								_context3.next = 56;
+								_context3.next = 51;
 								break;
 							}
 
 							throw _iteratorError;
 
-						case 56:
-							return _context3.finish(53);
+						case 51:
+							return _context3.finish(48);
 
-						case 57:
-							return _context3.finish(50);
+						case 52:
+							return _context3.finish(45);
 
-						case 58:
-							if (!newPurchase) {
-								_context3.next = 60;
-								break;
-							}
-
-							return _context3.abrupt('return', { title: 'success', content: agentCreditBalance, status: 'success' });
-
-						case 60:
+						case 53:
 							return _context3.abrupt('return', { title: 'Duplicated', content: 'Please try again later.', status: 'warning' });
 
-						case 63:
-							_context3.prev = 63;
+						case 56:
+							_context3.prev = 56;
 							_context3.t1 = _context3['catch'](0);
-							_context3.next = 67;
+							_context3.next = 60;
 							return _SystemLog2.default.create({ title: 'Credit Purchase Failed', content: ctx.user.username + ' purchased credit ' + req.item + ' ' + req.platform + ' ' + req.receipt + ' ' + _context3.t1, status: 'danger' });
 
-						case 67:
+						case 60:
 							return _context3.abrupt('return', { title: 'Error', content: 'Please try again later.', status: 'danger' });
 
-						case 68:
+						case 61:
 						case 'end':
 							return _context3.stop();
 					}
 				}
-			}, _callee3, _this3, [[0, 63], [17, 46, 50, 58], [51,, 53, 57]]);
+			}, _callee3, _this3, [[0, 56], [14, 41, 45, 53], [46,, 48, 52]]);
 		}))();
 	}
 };
