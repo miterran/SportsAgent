@@ -211,13 +211,9 @@ _nodeSchedule2.default.scheduleJob('*/15 * * * *', _asyncToGenerator( /*#__PURE_
 
 				case 8:
 					_context3.next = 10;
-					return _Event2.default.deleteExpiredUnpickEvents();
-
-				case 10:
-					_context3.next = 12;
 					return _User2.default.resetWeeklyBalanceToZero();
 
-				case 12:
+				case 10:
 				case 'end':
 					return _context3.stop();
 			}
