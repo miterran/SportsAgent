@@ -123,7 +123,7 @@ var updateEventOddFromPickMon = function () {
 
 					case 22:
 						if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-							_context.next = 73;
+							_context.next = 71;
 							break;
 						}
 
@@ -135,19 +135,20 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 70);
+						return _context.abrupt('continue', 68);
 
 					case 27:
 						thePeriod = (0, _renameEventPeriod2.default)(event.line.perioddesc);
 
-						if (!(thePeriod !== 'Second Half')) {
+						if (!(thePeriod === 'unknow')) {
 							_context.next = 30;
 							break;
 						}
 
-						return _context.abrupt('continue', 70);
+						return _context.abrupt('continue', 68);
 
 					case 30:
+						//if(thePeriod !== 'Second Half') continue;
 						theMatchTime = _moment2.default.utc(event.gamedate).add(5, 'h');
 
 						if (!(0, _moment2.default)().add(5, 'd').endOf('day').isBefore(theMatchTime)) {
@@ -155,7 +156,7 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 70);
+						return _context.abrupt('continue', 68);
 
 					case 33:
 						theOddCutOffTime = _moment2.default.utc(event.line.wagercutoff).add(5, 'h');
@@ -165,7 +166,7 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 70);
+						return _context.abrupt('continue', 68);
 
 					case 36:
 						if (!(0, _moment2.default)().add(1, 'h').isBefore(theOddCutOffTime)) {
@@ -173,20 +174,20 @@ var updateEventOddFromPickMon = function () {
 							break;
 						}
 
-						return _context.abrupt('continue', 70);
+						return _context.abrupt('continue', 68);
 
 					case 38:
 						theLeague = (0, _renameLeague2.default)(theSport, event.sportsubtype);
 						theAwayPitcher = theSport === 'Baseball' ? !_lodash2.default.isEmpty(event.team1.pitcher) ? event.team1.pitcher : 'Action' : null;
 						theHomePitcher = theSport === 'Baseball' ? !_lodash2.default.isEmpty(event.team2.pitcher) ? event.team2.pitcher : 'Action' : null;
 						theOddCutOffAt = theOddCutOffTime;
-						//			if(thePeriod === 'Second Half'){ 
 
-						theExpectSecondHalfTime = (0, _moment2.default)(theMatchTime).add(1, 'h').add(45, 'm');
-						isSecondHalfOnTime = (0, _moment2.default)(theExpectSecondHalfTime).isAfter(theOddCutOffTime); // return true: Yes its onTime. false: use expect time
+						if (thePeriod === 'Second Half') {
+							theExpectSecondHalfTime = (0, _moment2.default)(theMatchTime).add(1, 'h').add(45, 'm');
+							isSecondHalfOnTime = (0, _moment2.default)(theExpectSecondHalfTime).isAfter(theOddCutOffTime); // return true: Yes its onTime. false: use expect time
 
-						theOddCutOffAt = isSecondHalfOnTime ? theOddCutOffTime : theExpectSecondHalfTime;
-						//			}
+							theOddCutOffAt = isSecondHalfOnTime ? theOddCutOffTime : theExpectSecondHalfTime;
+						}
 						theSpreadPoint = Number(event.line.spread.points);
 						isSpreadPointPositive = theSpreadPoint > 0;
 						theHomeSpreadPoint = theSpreadPoint;
@@ -214,36 +215,36 @@ var updateEventOddFromPickMon = function () {
 							detail: event.team1.name + ' ' + theAwayROT + ' vs ' + event.team2.name + ' ' + theHomeROT
 						};
 						folderName = theLeague === 'NCAAB' || theLeague === 'NCAAF' ? 'NCAA' : theSport;
-						_context.next = 57;
+						_context.next = 55;
 						return (0, _fileExists2.default)(_index.dirname + ('/public/images/teamlogos/' + folderName + '/' + awayLogo.name + '.png'));
 
-					case 57:
+					case 55:
 						awayLogoExists = _context.sent;
 
 						if (awayLogoExists) {
-							_context.next = 61;
+							_context.next = 59;
 							break;
 						}
 
-						_context.next = 61;
+						_context.next = 59;
 						return _LogoCollect2.default.findOneAndUpdate({ name: awayLogo.name }, awayLogo, { upsert: true });
 
-					case 61:
-						_context.next = 63;
+					case 59:
+						_context.next = 61;
 						return (0, _fileExists2.default)(_index.dirname + ('/public/images/teamlogos/' + folderName + '/' + homeLogo.name + '.png'));
 
-					case 63:
+					case 61:
 						homeLogoExists = _context.sent;
 
 						if (homeLogoExists) {
-							_context.next = 67;
+							_context.next = 65;
 							break;
 						}
 
-						_context.next = 67;
+						_context.next = 65;
 						return _LogoCollect2.default.findOneAndUpdate({ name: homeLogo.name }, homeLogo, { upsert: true });
 
-					case 67:
+					case 65:
 						//
 
 						newEvent = {
@@ -287,64 +288,64 @@ var updateEventOddFromPickMon = function () {
 							status: 'Pending',
 							updatedAt: (0, _moment2.default)()
 						};
-						_context.next = 70;
+						_context.next = 68;
 						return _Event2.default.findOneAndUpdate({ uniqueID: newEvent.uniqueID, status: 'Pending' }, newEvent, { upsert: true });
 
-					case 70:
+					case 68:
 						_iteratorNormalCompletion = true;
 						_context.next = 22;
 						break;
 
-					case 73:
-						_context.next = 79;
+					case 71:
+						_context.next = 77;
 						break;
 
-					case 75:
-						_context.prev = 75;
+					case 73:
+						_context.prev = 73;
 						_context.t0 = _context['catch'](20);
 						_didIteratorError = true;
 						_iteratorError = _context.t0;
 
-					case 79:
-						_context.prev = 79;
-						_context.prev = 80;
+					case 77:
+						_context.prev = 77;
+						_context.prev = 78;
 
 						if (!_iteratorNormalCompletion && _iterator.return) {
 							_iterator.return();
 						}
 
-					case 82:
-						_context.prev = 82;
+					case 80:
+						_context.prev = 80;
 
 						if (!_didIteratorError) {
-							_context.next = 85;
+							_context.next = 83;
 							break;
 						}
 
 						throw _iteratorError;
 
+					case 83:
+						return _context.finish(80);
+
+					case 84:
+						return _context.finish(77);
+
 					case 85:
-						return _context.finish(82);
-
-					case 86:
-						return _context.finish(79);
-
-					case 87:
-						_context.next = 93;
+						_context.next = 91;
 						break;
 
-					case 89:
-						_context.prev = 89;
+					case 87:
+						_context.prev = 87;
 						_context.t1 = _context['catch'](0);
-						_context.next = 93;
+						_context.next = 91;
 						return _SystemLog2.default.create({ title: 'update pick mon event failed', content: '' + _context.t1, status: 'danger' });
 
-					case 93:
+					case 91:
 					case 'end':
 						return _context.stop();
 				}
 			}
-		}, _callee, undefined, [[0, 89], [20, 75, 79, 87], [80,, 82, 86]]);
+		}, _callee, undefined, [[0, 87], [20, 73, 77, 85], [78,, 80, 84]]);
 	}));
 
 	return function updateEventOddFromPickMon() {
